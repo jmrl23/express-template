@@ -1,0 +1,52 @@
+[
+  {
+    "statusCode": 400,
+    "title": "Bad Request",
+    "message": "The server could not understand the request due to invalid syntax."
+  },
+  {
+    "statusCode": 401,
+    "title": "Unauthorized",
+    "message": "You need to be authenticated to access this resource."
+  },
+  {
+    "statusCode": 403,
+    "title": "Forbidden",
+    "message": "You are not authorized to access this resource."
+  },
+  {
+    "statusCode": 404,
+    "title": "Not Found",
+    "message": "The requested resource could not be found on the server."
+  },
+  {
+    "statusCode": 405,
+    "title": "Method Not Allowed",
+    "message": "The method specified in the request is not allowed for the resource identified."
+  },
+  {
+    "statusCode": 406,
+    "title": "Not Acceptable",
+    "message": "The server can not generate a response matching the list of acceptable values defined in the request's headers."
+  },
+  {
+    "statusCode": 409,
+    "title": "Conflict",
+    "message": "The request could not be completed due to a conflict with the current state of the target resource."
+  },
+  {
+    "statusCode": 422,
+    "title": "Unprocessable Entity",
+    "message": "The server understands the request but cannot process it because it contains invalid data."
+  },
+  {
+    "statusCode": 429,
+    "title": "Too Many Requests",
+    "message": "You have sent too many requests in a given amount of time. Please wait and try again later."
+  },
+  {
+    "statusCode": 500,
+    "title": "Internal Server Error",
+    "message": "The server encountered an unexpected error and was unable to complete your request. Please try again later."
+  }
+]
