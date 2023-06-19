@@ -1,5 +1,6 @@
-import express, { json, urlencoded } from 'express';
+import express from 'express';
 import controllers from './controllers';
+import { join } from 'path';
 import {
   corsMiddleware,
   helmetMiddleware,
@@ -18,11 +19,12 @@ app.use(
       policy: 'cross-origin',
     },
   }),
+  express.static(join(__dirname, '../public')),
+  express.json(),
+  express.urlencoded({ extended: false }),
   corsMiddleware({
     origin: 'http://localhost:3000',
   }),
-  json(),
-  urlencoded({ extended: false }),
 );
 
 // controllers
