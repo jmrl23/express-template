@@ -29,7 +29,7 @@ export const wrapper = function wrapper(
             if (typeof data === 'object') {
               response.json(data);
             } else {
-              response.send((data as any)?.toString());
+              response.send((data as unknown)?.toString());
             }
           }
         } catch (error: unknown) {
