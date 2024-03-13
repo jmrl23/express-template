@@ -10,7 +10,7 @@
     "lint": "eslint -c .eslintrc.js ."
   },
   "dependencies": {
-    "@jmrl23/express-helper": "^1.5.4",
+    "@jmrl23/express-helper": "^1.5.5",
     "cache-manager": "^5.2.3",
     "colorette": "^2.0.20",
     "cors": "^2.8.5",
