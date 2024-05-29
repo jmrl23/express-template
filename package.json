@@ -20,6 +20,7 @@
     "env-var": "^7.5.0",
     "express": "^4.19.2",
     "http-errors": "^2.0.0",
+    "json-schema-to-ts": "^3.1.0",
     "morgan": "^1.10.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",

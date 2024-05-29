@@ -5,7 +5,7 @@ import fs from 'node:fs';
 export default function loadRoutes(
   app: Express,
   dirPath: string,
-  callback?: LoadRouteCallback,
+  callback?: LoadRoutesCallback,
 ): void {
   const files = getFileList(dirPath);
   const routeFiles = files.filter((file) => {
@@ -18,12 +18,12 @@ export default function loadRoutes(
     const prefix = filePath
       .replace(/([a-zA-Z\-\_0-9])+\.route\.(ts|js)$/, '')
       .replace(new RegExp(`\\${path.sep}`, 'g'), '/');
-    const { app: _app, middlewares, autoPrefix } = require(file);
+    const { app: _app, preHandlers, autoPrefix } = require(file);
 
     if (_app) {
       const _prefix = autoPrefix ? autoPrefix.replace('/', '') : '';
-      const _middlewares = Array.isArray(middlewares) ? middlewares : [];
-      app.use(`${prefix}${_prefix}`, _middlewares, _app);
+      const _preHandlers = Array.isArray(preHandlers) ? preHandlers : [];
+      app.use(`${prefix}${_prefix}`, _preHandlers, _app);
     }
   }
 
@@ -44,6 +44,6 @@ function getFileList(dirPath: string): string[] {
   return files;
 }
 
-interface LoadRouteCallback {
+interface LoadRoutesCallback {
   (routeFiles: string[]): void;
 }

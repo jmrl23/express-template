@@ -2,21 +2,35 @@ import { type RequestHandler, Router } from 'express';
 import AppService from '../services/app.service';
 import wrapper from '../lib/utils/express/wrapper';
 import validate, { PROP } from '../lib/utils/express/validate';
+import type { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
 export const autoPrefix: string | undefined = '/';
 
-export const middlewares: RequestHandler[] = [];
+export const preHandlers: RequestHandler[] = [];
 
 export const app: Router = Router();
 
 async function load() {
   const appService = await AppService.getInstance();
 
+  const messageReverseBodySchema = {
+    type: 'object',
+    properties: {
+      message: {
+        type: 'string',
+        minLength: 1,
+      },
+    },
+    required: ['message'],
+    additionalProperties: false,
+  } as const satisfies JSONSchema;
+
   app.post(
     '/message/reverse',
 
     /**
      * @openapi
+     *
      * /message/reverse:
      *  post:
      *    description: Reverse message value
@@ -41,23 +55,17 @@ async function load() {
      *        description: Default
      */
 
-    validate(PROP.Body, {
-      type: 'object',
-      properties: {
-        message: {
-          type: 'string',
-          minLength: 1,
-        },
-      },
-      required: ['message'],
-      additionalProperties: false,
-    }),
+    validate(PROP.Body, messageReverseBodySchema),
     wrapper<
       RequestHandler<
-        unknown, // req.params
-        unknown, // res.body
-        { message: string }, // req.body
-        unknown // req.query
+        // req.params
+        unknown,
+        // res.body
+        unknown,
+        // req.body
+        FromSchema<typeof messageReverseBodySchema>,
+        // req.query
+        unknown
       >
     >(async function (request) {
       const message = request.body.message;

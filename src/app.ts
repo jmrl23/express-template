@@ -13,7 +13,6 @@ import morganMiddleware from './middlewares/morgan.middleware';
 import cors from 'cors';
 
 const app = express();
-const routesDir = path.resolve(__dirname, 'routes');
 
 // Configurations
 app.disable('x-powered-by');
@@ -33,6 +32,7 @@ app.use(
 );
 
 // Load route files
+const routesDir = path.resolve(__dirname, 'routes');
 loadRoutes(app, routesDir, function (routeFiles) {
   for (const filePath of routeFiles) {
     const file = filePath.substring(routesDir.length + 1);

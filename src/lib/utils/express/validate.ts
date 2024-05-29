@@ -1,6 +1,7 @@
 import Ajv, { type InstanceOptions } from 'ajv';
 import wrapper from './wrapper';
 import { BadRequest } from 'http-errors';
+import type { JSONSchema } from 'json-schema-to-ts';
 
 export enum PROP {
   Params = 'params',
@@ -10,7 +11,7 @@ export enum PROP {
 
 export default function validate(
   prop: PROP,
-  schema: object,
+  schema: JSONSchema,
   options?: InstanceOptions,
 ) {
   const ajv = new Ajv(options);
