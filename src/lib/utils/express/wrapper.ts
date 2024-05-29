@@ -5,15 +5,8 @@ export default function wrapper<
   ReqBody = unknown,
   ReqParams = unknown,
   ReqQuery = Query,
-  ResLocals extends Record<string, any> = _Locals,
 >(
-  requestHandler: RequestHandler<
-    ReqParams,
-    unknown,
-    ReqBody,
-    ReqQuery,
-    ResLocals
-  >,
+  requestHandler: RequestHandler<ReqParams, unknown, ReqBody, ReqQuery>,
 ): typeof requestHandler {
   return async function (request, response, next) {
     try {

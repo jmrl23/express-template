@@ -62,10 +62,8 @@ async function load() {
       // req.params
       unknown,
       // req.query
-      unknown,
-      // res.locals
-      {}
-    >(async function (request) {
+      unknown
+    >(async function (request, _) {
       const message = request.body.message;
       const reversedText = await appService.getReversedText(message);
 
