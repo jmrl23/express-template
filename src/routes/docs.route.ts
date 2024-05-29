@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import swaggerJsDoc, { type OAS3Options } from 'swagger-jsdoc';
+import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 
 export const autoPrefix = '/docs';
