@@ -57,16 +57,14 @@ async function load() {
 
     validate(PROP.Body, messageReverseBodySchema),
     wrapper<
-      RequestHandler<
-        // req.params
-        unknown,
-        // res.body
-        unknown,
-        // req.body
-        FromSchema<typeof messageReverseBodySchema>,
-        // req.query
-        unknown
-      >
+      // req.body
+      FromSchema<typeof messageReverseBodySchema>,
+      // req.params
+      unknown,
+      // req.query
+      unknown,
+      // res.locals
+      {}
     >(async function (request) {
       const message = request.body.message;
       const reversedText = await appService.getReversedText(message);
