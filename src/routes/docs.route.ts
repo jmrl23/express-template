@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerJsDoc, { type OAS3Options } from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 
 const app = Router();
@@ -41,6 +41,6 @@ app.use(swaggerUiExpress.serve).get(
         hideUntagged: true,
       },
       apis: ['src/routes/**/*.ts', 'build/routes/**/*.js'],
-    }),
+    } satisfies OAS3Options),
   ),
 );
