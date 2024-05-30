@@ -9,9 +9,16 @@ export enum PROP {
   Query = 'query',
 }
 
+type Schema = JSONSchema & Record<string, unknown>;
+
+// For JS folks
+export function asSchema(schema: Schema): JSONSchema {
+  return schema;
+}
+
 export default function validate(
   prop: PROP,
-  schema: JSONSchema,
+  schema: Schema,
   options: Options = {},
 ) {
   const ajv = new Ajv({

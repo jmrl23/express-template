@@ -2,11 +2,11 @@ import type { RequestHandler } from 'express';
 import type { Query, Locals as _Locals } from 'express-serve-static-core';
 
 export default function wrapper<
-  ReqBody = unknown,
-  ReqParams = unknown,
+  ReqBody = any,
+  ReqParams = any,
   ReqQuery = Query,
 >(
-  requestHandler: RequestHandler<ReqParams, unknown, ReqBody, ReqQuery>,
+  requestHandler: RequestHandler<ReqParams, any, ReqBody, ReqQuery>,
 ): typeof requestHandler {
   return async function (request, response, next) {
     try {
