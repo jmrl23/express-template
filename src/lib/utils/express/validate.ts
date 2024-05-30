@@ -1,5 +1,6 @@
 import Ajv, { type Options } from 'ajv';
 import wrapper from './wrapper';
+import betterAjvErrors from 'better-ajv-errors';
 import { BadRequest } from 'http-errors';
 import type { JSONSchema } from 'json-schema-to-ts';
 
@@ -24,16 +25,19 @@ export default function validate(
   const ajv = new Ajv({
     strict: true,
     coerceTypes: true,
-    allErrors: true,
     ...options,
+    allErrors: true,
   });
   return wrapper(function anonymous(request, _, next) {
     const _validate = ajv.compile(schema);
     const data = request[prop];
-    const isValid = _validate(data);
-    const error = _validate.errors?.at(0);
-    if (!isValid && error) {
-      const message = `[${error.schemaPath}] ${error.message}`;
+    const valid = _validate(data);
+    if (!valid) {
+      const errors = betterAjvErrors(schema, data, _validate.errors ?? [], {
+        format: 'js',
+      });
+      const error = errors[0];
+      const message = error.error.trim();
       throw new BadRequest(message);
     }
     next();
