@@ -9,7 +9,7 @@ export default function loadRoutes(
 ): void {
   const files = getFileList(dirPath);
   const routeFiles = files.filter((file) => {
-    const isRouteFile = /\.route.(ts|js)$/.test(file);
+    const isRouteFile = /\.route\.(ts|js)$/.test(file);
     return isRouteFile;
   });
 
