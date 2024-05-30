@@ -1,6 +1,7 @@
-import type { Express } from 'express-serve-static-core';
 import path from 'node:path';
 import fs from 'node:fs';
+import { Router } from 'express';
+import type { Express } from 'express-serve-static-core';
 
 export default function loadRoutes(
   app: Express,
@@ -12,31 +13,39 @@ export default function loadRoutes(
     const isRouteFile = /\.route\.(ts|js)$/.test(file);
     return isRouteFile;
   });
+  const loadedRoutes: string[] = [];
 
   for (const routeFile of routeFiles) {
     const mod = require(routeFile);
+    if (!(mod.default instanceof Function)) continue;
     const _path = routeFile
       .substring(dirPath.length)
       .replace(/[\\\/]/g, '/')
       .split('/');
     _path.splice(-1);
-    const prefix: string = mod.prefix ?? (_path.join('/') || '/');
-    app.use(prefix, mod.default);
+    const prefix = mod.prefix ?? (_path.join('/') || '/');
+    const router = Router();
+    app.use(prefix, router);
+    mod.default(router);
+    loadedRoutes.push(routeFile);
   }
 
-  callback?.(routeFiles);
+  callback?.(loadedRoutes);
 }
 
 function getFileList(dirPath: string): string[] {
-  const files = fs
-    .readdirSync(dirPath)
-    .map((file) => {
-      const filePath = path.resolve(dirPath, file);
-      const stat = fs.statSync(filePath);
-      if (stat.isDirectory()) return getFileList(filePath);
-      return filePath;
-    })
-    .flat();
+  const files: string[] = [];
+  const dirFiles = fs.readdirSync(dirPath);
+
+  for (const file of dirFiles) {
+    const filePath = path.resolve(dirPath, file);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      files.push(...getFileList(filePath));
+      continue;
+    }
+    files.push(filePath);
+  }
 
   return files;
 }

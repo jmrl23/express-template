@@ -1,17 +1,13 @@
-import { Router } from 'express';
 import AppService from '../services/app.service';
 import wrapper from '../lib/utils/express/wrapper';
 import validate, { PROP } from '../lib/utils/express/validate';
-import type { FromSchema, JSONSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
+import { asJsonSchema, asRoute } from '../lib/utils/express/typings';
 
-const app = Router();
-
-export default app;
-
-async function load() {
+export default asRoute(async function appRoute(app) {
   const appService = await AppService.getInstance();
 
-  const messageReverseBodySchema = {
+  const messageReverseBodySchema = asJsonSchema({
     type: 'object',
     properties: {
       message: {
@@ -21,7 +17,7 @@ async function load() {
     },
     required: ['message'],
     additionalProperties: false,
-  } as const satisfies JSONSchema;
+  } as const);
 
   app.post(
     '/message/reverse',
@@ -70,6 +66,4 @@ async function load() {
       };
     }),
   );
-}
-
-void load();
+});

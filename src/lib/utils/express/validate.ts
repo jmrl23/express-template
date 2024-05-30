@@ -2,7 +2,8 @@ import Ajv, { type Options } from 'ajv';
 import wrapper from './wrapper';
 import betterAjvErrors from 'better-ajv-errors';
 import { BadRequest } from 'http-errors';
-import type { JSONSchema } from 'json-schema-to-ts';
+import type { RequestHandler } from 'express';
+import type { Schema } from './typings';
 
 export enum PROP {
   Params = 'params',
@@ -10,18 +11,11 @@ export enum PROP {
   Query = 'query',
 }
 
-type Schema = JSONSchema & Record<string, unknown>;
-
-// For JS folks
-export function asSchema(schema: Schema): JSONSchema {
-  return schema;
-}
-
 export default function validate(
   prop: PROP,
   schema: Schema,
   options: Options = {},
-) {
+): RequestHandler {
   const ajv = new Ajv({
     strict: true,
     coerceTypes: true,
