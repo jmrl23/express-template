@@ -2,9 +2,11 @@ import { Router } from 'express';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 
-export const autoPrefix = '/docs';
+const app = Router();
 
-export const app = Router();
+export const prefix = '/docs';
+
+export default app;
 
 app.use(swaggerUiExpress.serve).get(
   '/',

@@ -1,14 +1,12 @@
-import { type RequestHandler, Router } from 'express';
+import { Router } from 'express';
 import AppService from '../services/app.service';
 import wrapper from '../lib/utils/express/wrapper';
 import validate, { PROP } from '../lib/utils/express/validate';
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
-export const autoPrefix: string | undefined = '/';
+const app = Router();
 
-export const preHandlers: RequestHandler[] = [];
-
-export const app: Router = Router();
+export default app;
 
 async function load() {
   const appService = await AppService.getInstance();

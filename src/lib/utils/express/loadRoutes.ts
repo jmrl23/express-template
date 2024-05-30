@@ -13,18 +13,15 @@ export default function loadRoutes(
     return isRouteFile;
   });
 
-  for (const file of routeFiles) {
-    const filePath = file.substring(dirPath.length);
-    const prefix = filePath
-      .replace(/([a-zA-Z\-\_0-9])+\.route\.(ts|js)$/, '')
-      .replace(new RegExp(`\\${path.sep}`, 'g'), '/');
-    const { app: _app, preHandlers, autoPrefix } = require(file);
-
-    if (_app) {
-      const _prefix = autoPrefix ? autoPrefix.replace('/', '') : '';
-      const _preHandlers = Array.isArray(preHandlers) ? preHandlers : [];
-      app.use(`${prefix}${_prefix}`, _preHandlers, _app);
-    }
+  for (const routeFile of routeFiles) {
+    const mod = require(routeFile);
+    const _path = routeFile
+      .substring(dirPath.length)
+      .replace(/[\\\/]/g, '/')
+      .split('/');
+    _path.splice(-1);
+    const prefix: string = mod.prefix ?? (_path.join('/') || '/');
+    app.use(prefix, mod.default);
   }
 
   callback?.(routeFiles);
