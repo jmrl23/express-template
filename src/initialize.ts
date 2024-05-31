@@ -1,8 +1,9 @@
 import path from 'node:path';
 import loadDotEnv from './lib/utils/loadDotEnv';
-import { NODE_ENV } from './lib/constants/environment';
 
 console.clear();
+
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
 loadDotEnv(
   path.resolve(__dirname, '../.env'),
