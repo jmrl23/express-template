@@ -10,13 +10,13 @@ Simple starter template for express application.
 yarn # or npm install
 ```
 
-## Commands
+## Scripts
 
-| Command             | Description                                       |
-| ------------------- | ------------------------------------------------- |
-| yarn run build      | build                                             |
-| yarn run start      | start (should run build first)                    |
-| yarn run start:dev  | start in development mode (using swc)             |
-| yarn run start:prod | start in production mode (should run build first) |
-| yarn run format     | format code (using prettier)                      |
-| yarn run lint       | lint code (using eslint)                          |
+| Script     | Description                                                                      |
+| ---------- | -------------------------------------------------------------------------------- |
+| build      | build project                                                                    |
+| start      | start (must build first)                                                         |
+| start:dev  | start on development mode (uses swc)                                             |
+| start:prod | start on production mode (set `NODE_ENV` to `production` and run `start` script) |
+| format     | format codes (prettier)                                                          |
+| lint       | lint codes (eslint)                                                              |
