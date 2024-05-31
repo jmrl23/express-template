@@ -35,7 +35,9 @@ app.use(
 const routesDir = path.resolve(__dirname, 'routes');
 loadRoutes(app, routesDir, function (routeFiles) {
   for (const filePath of routeFiles) {
-    const file = filePath.substring(routesDir.length + 1);
+    const file = filePath
+      .replace(/[\\\/]/g, '/')
+      .substring(routesDir.length + 1);
     logger.info(
       `Route %s {%s}`,
       colorette.yellow('Registered'),

@@ -1,9 +1,13 @@
 import type { RequestHandler } from 'express';
-import type { Query, Locals as _Locals } from 'express-serve-static-core';
+import type {
+  Query,
+  ParamsDictionary,
+  Locals as _Locals,
+} from 'express-serve-static-core';
 
 export default function wrapper<
   ReqBody = any,
-  ReqParams = any,
+  ReqParams = ParamsDictionary,
   ReqQuery = Query,
 >(
   requestHandler: RequestHandler<ReqParams, any, ReqBody, ReqQuery>,
@@ -13,14 +17,10 @@ export default function wrapper<
       const data = await Promise.resolve(
         requestHandler(request, response, next),
       );
-      if (data !== undefined) {
-        if (typeof data === 'object') {
-          response.json(data);
-          return;
-        }
-        response.send((data as unknown)?.toString());
-      }
-    } catch (error: unknown) {
+      if (data === undefined) return;
+      if (typeof data === 'object') return response.json(data);
+      response.send((data as unknown)?.toString());
+    } catch (error) {
       if (!response.headersSent) next(error);
     }
   };

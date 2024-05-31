@@ -1,7 +1,7 @@
-import path from 'node:path';
-import fs from 'node:fs';
 import { Router } from 'express';
 import type { Express } from 'express-serve-static-core';
+import getFileList from '../getFileList';
+import path from 'node:path';
 
 export default function loadRoutes(
   app: Express,
@@ -10,44 +10,29 @@ export default function loadRoutes(
 ): void {
   const files = getFileList(dirPath);
   const routeFiles = files.filter((file) => {
-    const isRouteFile = /\.route\.(ts|js)$/.test(file);
+    const extensions = ['js', 'ts'];
+    const fileName = path.basename(file);
+    const isRouteFile = extensions.some((ext) =>
+      fileName.toLowerCase().endsWith(`.route.${ext}`),
+    );
     return isRouteFile;
   });
   const loadedRoutes: string[] = [];
 
   for (const routeFile of routeFiles) {
-    const mod = require(routeFile);
-    if (!(mod.default instanceof Function)) continue;
-    const _path = routeFile
-      .substring(dirPath.length)
-      .replace(/[\\\/]/g, '/')
-      .split('/');
-    _path.splice(-1);
-    const prefix = mod.prefix ?? (_path.join('/') || '/');
-    const router = Router();
+    const { default: routeFunction, prefix: p, router: r } = require(routeFile);
+    if (!(routeFunction instanceof Function)) continue;
+    const _path = routeFile.replace(/[\\\/]/g, '/').substring(dirPath.length);
+    const fileName = path.basename(routeFile);
+    const prefix =
+      p ?? (_path.substring(0, _path.length - fileName.length - 1) || '/');
+    const router = r ?? Router();
     app.use(prefix, router);
-    mod.default(router);
+    routeFunction(router);
     loadedRoutes.push(routeFile);
   }
 
   callback?.(loadedRoutes);
-}
-
-function getFileList(dirPath: string): string[] {
-  const files: string[] = [];
-  const dirFiles = fs.readdirSync(dirPath);
-
-  for (const file of dirFiles) {
-    const filePath = path.resolve(dirPath, file);
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) {
-      files.push(...getFileList(filePath));
-      continue;
-    }
-    files.push(filePath);
-  }
-
-  return files;
 }
 
 interface LoadRoutesCallback {
