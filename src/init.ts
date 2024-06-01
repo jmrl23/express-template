@@ -1,5 +1,5 @@
 import path from 'node:path';
-import loadDotEnv from './lib/utils/loadDotEnv';
+import loadDotEnv from './lib/util/loadDotEnv';
 
 console.clear();
 

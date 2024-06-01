@@ -1,8 +1,8 @@
 import AppService from '../services/app.service';
-import wrapper from '../lib/utils/express/wrapper';
-import validate, { PROP } from '../lib/utils/express/validate';
+import wrapper from '../lib/util/express/wrapper';
+import validate, { PROP } from '../lib/util/express/validate';
 import type { FromSchema } from 'json-schema-to-ts';
-import { asJsonSchema, asRoute } from '../lib/utils/express/typings';
+import { asJsonSchema, asRoute } from '../lib/util/express/typings';
 
 export default asRoute(async function appRoute(app) {
   const appService = await AppService.getInstance();

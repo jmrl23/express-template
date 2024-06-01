@@ -1,8 +1,8 @@
 import path from 'node:path';
 import express, { type ErrorRequestHandler } from 'express';
-import loadRoutes from './lib/utils/express/loadRoutes';
-import logger from './lib/utils/logger';
-import wrapper from './lib/utils/express/wrapper';
+import loadRoutes from './lib/util/express/loadRoutes';
+import logger from './lib/util/logger';
+import wrapper from './lib/util/express/wrapper';
 import * as colorette from 'colorette';
 import createHttpError, {
   HttpError,

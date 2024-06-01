@@ -1,6 +1,6 @@
 import swaggerJsDoc, { type OAS3Options } from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
-import { asRoute } from '../lib/utils/express/typings';
+import { asRoute } from '../lib/util/express/typings';
 
 export const prefix = '/docs';
 

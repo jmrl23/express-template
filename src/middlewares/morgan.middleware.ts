@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import morgan from 'morgan';
-import logger from '../lib/utils/logger';
+import logger from '../lib/util/logger';
 import * as colorette from 'colorette';
 
 export default (function morganMiddleware() {
