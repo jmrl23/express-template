@@ -7,10 +7,15 @@ import type {
 
 export default function wrapper<
   ReqBody = any,
-  ReqParams = ParamsDictionary,
-  ReqQuery = Query,
+  ReqParams = unknown,
+  ReqQuery = unknown,
 >(
-  requestHandler: RequestHandler<ReqParams, any, ReqBody, ReqQuery>,
+  requestHandler: RequestHandler<
+    ReqParams & ParamsDictionary,
+    any,
+    ReqBody,
+    ReqQuery & Query
+  >,
 ): typeof requestHandler {
   return async function (request, response, next) {
     try {
