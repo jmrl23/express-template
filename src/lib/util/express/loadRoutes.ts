@@ -22,6 +22,9 @@ export default function loadRoutes(
   for (const routeFile of routeFiles) {
     const { default: routeFunction, prefix: p, router: r } = require(routeFile);
     if (!(routeFunction instanceof Function)) continue;
+    if (r && Object.getPrototypeOf(r) !== Router)
+      throw new Error('Invalid route router');
+    if (p && typeof p !== 'string') throw new Error('Invalid route prefix');
     const _path = routeFile.replace(/[\\\/]/g, '/').substring(dirPath.length);
     const fileName = path.basename(routeFile);
     const prefix =

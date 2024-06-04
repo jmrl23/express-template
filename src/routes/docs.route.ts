@@ -1,10 +1,17 @@
-import swaggerJsDoc, { type OAS3Options } from 'swagger-jsdoc';
+import swaggerJsDoc, { type OAS3Options, type Server } from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 import { asRoute } from '../lib/util/express/typings';
 
 export const prefix = '/docs';
 
 export default asRoute(function docsRoute(app) {
+  const servers: Server[] = [
+    {
+      url: 'http://localhost:3001',
+      description: 'Default local development server',
+    },
+  ];
+
   app.use(swaggerUiExpress.serve).get(
     '/',
     swaggerUiExpress.setup(
@@ -16,12 +23,7 @@ export default asRoute(function docsRoute(app) {
             version: '1.0.0',
             description: 'App API docs',
           },
-          servers: [
-            {
-              url: 'http://localhost:3001',
-              description: 'Default local development server',
-            },
-          ],
+          servers,
           components: {
             securitySchemes: {
               bearerAuth: {

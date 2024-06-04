@@ -1,13 +1,14 @@
 import './init';
-import { PORT } from './lib/constant/environment';
+import { SERVER_HOSTNAME, PORT } from './lib/constant/environment';
 import detectPort from 'detect-port';
 import server from './server';
 import logger from './lib/util/logger';
 
 async function main() {
+  const host = SERVER_HOSTNAME;
   const port = await detectPort(PORT);
 
-  server.listen(port, function () {
+  server.listen({ host, port }, function () {
     const serverAddress = server.address();
     if (!serverAddress || typeof serverAddress === 'string') return;
     const address =

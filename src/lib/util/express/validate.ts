@@ -1,5 +1,6 @@
 import Ajv, { type Options } from 'ajv';
 import wrapper from './wrapper';
+import ajvFormats from 'ajv-formats';
 import betterAjvErrors from 'better-ajv-errors';
 import { BadRequest } from 'http-errors';
 import type { RequestHandler } from 'express';
@@ -22,8 +23,9 @@ export default function validate(
     ...options,
     allErrors: true,
   });
+  ajvFormats(ajv);
+  const _validate = ajv.compile(schema);
   return wrapper(function anonymous(request, _, next) {
-    const _validate = ajv.compile(schema);
     const data = request[prop];
     const valid = _validate(data);
     if (!valid) {
