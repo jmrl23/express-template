@@ -19,4 +19,3 @@ yarn # or npm install
 | start:dev  | start on development mode (uses swc)                                             |
 | start:prod | start on production mode (set `NODE_ENV` to `production` and run `start` script) |
 | format     | format codes (prettier)                                                          |
-| lint       | lint codes (eslint)                                                              |

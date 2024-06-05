@@ -1,5 +1,5 @@
 import { memoryStore } from 'cache-manager';
-import { asRoute } from '../lib/util/express/typings';
+import { asRoute } from '../lib/util/typings';
 import TodoService from '../services/todo.service';
 import validate, { PROP } from '../lib/util/express/validate';
 import {

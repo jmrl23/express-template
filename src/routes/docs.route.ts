@@ -1,6 +1,6 @@
 import swaggerJsDoc, { type OAS3Options, type Server } from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
-import { asRoute } from '../lib/util/express/typings';
+import { asRoute } from '../lib/util/typings';
 
 export const prefix = '/docs';
 
@@ -19,9 +19,8 @@ export default asRoute(function docsRoute(app) {
         definition: {
           openapi: '3.0.0',
           info: {
-            title: 'App API',
+            title: 'Sample API',
             version: '1.0.0',
-            description: 'App API docs',
           },
           servers,
           components: {
