@@ -23,7 +23,6 @@
     "http-errors": "^2.0.0",
     "json-schema-to-ts": "^3.1.0",
     "morgan": "^1.10.0",
-    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0"
   },
@@ -35,7 +34,6 @@
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.13",
-    "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "nodemon": "^3.1.2",
     "openapi-types": "^12.1.3",

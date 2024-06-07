@@ -11,6 +11,8 @@ import createHttpError, {
 } from 'http-errors';
 import morganMiddleware from './middlewares/morgan.middleware';
 import cors from 'cors';
+import swaggerUiExpress from 'swagger-ui-express';
+import { spec } from './lib/docs';
 
 const app = express();
 
@@ -45,6 +47,11 @@ loadRoutes(app, routesDir, function (routeFiles) {
     );
   }
 });
+
+// Swagger UI
+app
+  .use('/docs', swaggerUiExpress.serve)
+  .get('/docs', swaggerUiExpress.setup(spec));
 
 // Static serve
 app.use(express.static(path.resolve(__dirname, '../public')));

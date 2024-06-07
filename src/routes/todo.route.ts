@@ -5,46 +5,21 @@ import validate, { PROP } from '../lib/util/express/validate';
 import {
   todoCreateSchema,
   todoDeleteSchema,
+  todoGetAllSchema,
   todoGetSchema,
   todoUpdateSchema,
 } from '../schemas/todo.schema';
+import { addSpecPaths } from '../lib/docs';
 import wrapper from '../lib/util/express/wrapper';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const prefix = '/todo';
 
 export default asRoute(async function (app) {
-  const store = memoryStore({ ttl: 0 });
-  const todoService = await TodoService.createInstance(store);
+  const todoServiceCacheStore = memoryStore({ ttl: 0 });
+  const todoService = await TodoService.createInstance(todoServiceCacheStore);
 
   app
-
-    /**
-     * @openapi
-     *
-     * /todo/create:
-     *  post:
-     *    description: Create new todo item
-     *    tags:
-     *      - todo
-     *    security: []
-     *    requestBody:
-     *      required: true
-     *      content:
-     *        application/json:
-     *          schema:
-     *            type: object
-     *            required:
-     *              - content
-     *            properties:
-     *              content:
-     *                type: string
-     *                minLength: 1
-     *                example: Walk the dog
-     *    responses:
-     *      200:
-     *        description: Default Response
-     */
 
     .post(
       '/create',
@@ -58,20 +33,6 @@ export default asRoute(async function (app) {
       }),
     )
 
-    /**
-     * @openapi
-     *
-     * /todo:
-     *  get:
-     *    description: Get todo items
-     *    tags:
-     *      - todo
-     *    security: []
-     *    responses:
-     *      200:
-     *        description: Default Response
-     */
-
     .get(
       '/',
       wrapper(async function () {
@@ -81,26 +42,6 @@ export default asRoute(async function (app) {
         };
       }),
     )
-
-    /**
-     * @openapi
-     *
-     * /todo/{id}:
-     *  get:
-     *    description: Get todo item
-     *    tags:
-     *      - todo
-     *    security: []
-     *    parameters:
-     *      - in: path
-     *        name: id
-     *        required: true
-     *        type: string
-     *        format: uuid
-     *    responses:
-     *      200:
-     *        description: Default Response
-     */
 
     .get(
       '/:id',
@@ -115,39 +56,6 @@ export default asRoute(async function (app) {
       ),
     )
 
-    /**
-     * @openapi
-     *
-     * /todo/update:
-     *  patch:
-     *    description: Update todo item
-     *    tags:
-     *      - todo
-     *    security: []
-     *    requestBody:
-     *      required: true
-     *      content:
-     *        application/json:
-     *          schema:
-     *            type: object
-     *            required:
-     *              - id
-     *            properties:
-     *              id:
-     *                type: string
-     *                format: uuid
-     *              content:
-     *                type: string
-     *                minLength: 1
-     *                example: Walk the dog
-     *              done:
-     *                type: boolean
-     *                example: false
-     *    responses:
-     *      200:
-     *        description: Default Response
-     */
-
     .patch(
       '/update',
       validate(PROP.Body, todoUpdateSchema),
@@ -159,26 +67,6 @@ export default asRoute(async function (app) {
         };
       }),
     )
-
-    /**
-     * @openapi
-     *
-     * /todo/delete/{id}:
-     *  delete:
-     *    description: Delete todo item
-     *    tags:
-     *      - todo
-     *    security: []
-     *    parameters:
-     *      - in: path
-     *        name: id
-     *        required: true
-     *        type: string
-     *        format: uuid
-     *    responses:
-     *      200:
-     *        description: Default Response
-     */
 
     .delete(
       '/delete/:id',
@@ -193,4 +81,107 @@ export default asRoute(async function (app) {
         },
       ),
     );
+});
+
+/**
+ * Docs
+ */
+
+addSpecPaths({
+  '/todo/create': {
+    post: {
+      description: todoCreateSchema.description,
+      tags: ['todo'],
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: todoCreateSchema as Record<string, unknown>,
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Default Response',
+        },
+      },
+    },
+  },
+
+  '/todo': {
+    get: {
+      description: todoGetAllSchema.description,
+      tags: ['todo'],
+      security: [],
+      responses: {
+        '200': {
+          description: 'Default Response',
+        },
+      },
+    },
+  },
+
+  '/todo/{id}': {
+    get: {
+      description: todoGetSchema.description,
+      tags: ['todo'],
+      security: [],
+      parameters: [
+        {
+          in: 'params',
+          name: 'id',
+          required: todoGetSchema.required?.includes('id'),
+          schema: todoGetSchema.properties.id,
+        },
+      ],
+      responses: {
+        '200': {
+          description: 'Default Response',
+        },
+      },
+    },
+  },
+
+  '/todo/update': {
+    patch: {
+      description: todoUpdateSchema.description,
+      tags: ['todo'],
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: todoUpdateSchema as Record<string, unknown>,
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Default Response',
+        },
+      },
+    },
+  },
+
+  '/todo/delete/{id}': {
+    get: {
+      description: todoDeleteSchema.description,
+      tags: ['todo'],
+      security: [],
+      parameters: [
+        {
+          in: 'params',
+          name: 'id',
+          required: todoDeleteSchema.required?.includes('id'),
+          schema: todoDeleteSchema.properties.id,
+        },
+      ],
+      responses: {
+        '200': {
+          description: 'Default Response',
+        },
+      },
+    },
+  },
 });
