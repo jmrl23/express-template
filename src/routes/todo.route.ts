@@ -2,6 +2,7 @@ import { memoryStore } from 'cache-manager';
 import { asRoute } from '../lib/util/typings';
 import TodoService from '../services/todo.service';
 import validate, { PROP } from '../lib/util/express/validate';
+import wrapper from '../lib/util/express/wrapper';
 import {
   todoCreateSchema,
   todoDeleteSchema,
@@ -10,7 +11,6 @@ import {
   todoUpdateSchema,
 } from '../schemas/todo.schema';
 import { addSpecPaths } from '../lib/docs';
-import wrapper from '../lib/util/express/wrapper';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const prefix = '/todo';
@@ -83,11 +83,8 @@ export default asRoute(async function (app) {
     );
 });
 
-/**
- * Docs
- */
-
-addSpecPaths({
+// Docs
+void addSpecPaths({
   '/todo/create': {
     post: {
       description: todoCreateSchema.description,
@@ -97,7 +94,10 @@ addSpecPaths({
         required: true,
         content: {
           'application/json': {
-            schema: todoCreateSchema as Record<string, unknown>,
+            schema: Object.assign(todoCreateSchema),
+            example: {
+              content: todoCreateSchema.properties.content.examples[0],
+            },
           },
         },
       },
@@ -127,14 +127,12 @@ addSpecPaths({
       description: todoGetSchema.description,
       tags: ['todo'],
       security: [],
-      parameters: [
-        {
-          in: 'params',
-          name: 'id',
-          required: todoGetSchema.required?.includes('id'),
-          schema: todoGetSchema.properties.id,
-        },
-      ],
+      parameters: Object.keys(todoGetSchema.properties).map((key) => ({
+        in: 'params',
+        name: key,
+        required: Object.assign(todoGetSchema).required.includes(key),
+        schema: todoGetSchema.properties,
+      })),
       responses: {
         '200': {
           description: 'Default Response',
@@ -152,7 +150,12 @@ addSpecPaths({
         required: true,
         content: {
           'application/json': {
-            schema: todoUpdateSchema as Record<string, unknown>,
+            schema: Object.assign(todoUpdateSchema),
+            example: {
+              id: '123e4567-e89b-12d3-a456-426614174000',
+              content: todoUpdateSchema.properties.content.examples[0],
+              done: todoUpdateSchema.properties.done.examples[0],
+            },
           },
         },
       },
@@ -169,14 +172,12 @@ addSpecPaths({
       description: todoDeleteSchema.description,
       tags: ['todo'],
       security: [],
-      parameters: [
-        {
-          in: 'params',
-          name: 'id',
-          required: todoDeleteSchema.required?.includes('id'),
-          schema: todoDeleteSchema.properties.id,
-        },
-      ],
+      parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
+        in: 'params',
+        name: key,
+        required: Object.assign(todoDeleteSchema).required.includes(key),
+        schema: todoDeleteSchema.properties,
+      })),
       responses: {
         '200': {
           description: 'Default Response',
