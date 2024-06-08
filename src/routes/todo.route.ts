@@ -5,10 +5,10 @@ import validate, { PROP } from '../lib/util/express/validate';
 import wrapper from '../lib/util/express/wrapper';
 import {
   todoCreateSchema,
-  todoDeleteSchema,
   todoGetAllSchema,
   todoGetSchema,
   todoUpdateSchema,
+  todoDeleteSchema,
 } from '../schemas/todo.schema';
 import { addSpecPaths } from '../lib/docs';
 import type { FromSchema } from 'json-schema-to-ts';
@@ -45,6 +45,7 @@ export default asRoute(async function (app) {
 
     .get(
       '/:id',
+      validate(PROP.Params, todoGetSchema),
       wrapper<unknown, FromSchema<typeof todoGetSchema>>(
         async function (request) {
           const { id } = request.params;
