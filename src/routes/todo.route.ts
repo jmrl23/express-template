@@ -128,7 +128,7 @@ void addSpecPaths({
       tags: ['todo'],
       security: [],
       parameters: Object.keys(todoGetSchema.properties).map((key) => ({
-        in: 'params',
+        in: 'path',
         name: key,
         required: Object.assign(todoGetSchema).required.includes(key),
         schema: todoGetSchema.properties,
@@ -168,12 +168,12 @@ void addSpecPaths({
   },
 
   '/todo/delete/{id}': {
-    get: {
+    delete: {
       description: todoDeleteSchema.description,
       tags: ['todo'],
       security: [],
       parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
-        in: 'params',
+        in: 'path',
         name: key,
         required: Object.assign(todoDeleteSchema).required.includes(key),
         schema: todoDeleteSchema.properties,
