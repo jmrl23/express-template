@@ -1,17 +1,19 @@
 import type { OpenAPIV3_1 } from 'openapi-types';
 
+const servers: Array<OpenAPIV3_1.ServerObject> = [
+  {
+    url: 'http://localhost:3001',
+    description: 'Default local development server',
+  },
+];
+
 export const spec: OpenAPIV3_1.Document & Record<string, unknown> = {
   openapi: '3.0.0',
   info: {
-    title: 'Sample API',
-    version: '1.0.0',
+    title: 'Application API',
+    version: '0.0.1',
   },
-  servers: [
-    {
-      url: 'http://localhost:3001',
-      description: 'Default local development server',
-    },
-  ],
+  servers,
   tags: [],
   paths: {},
   components: {
@@ -27,7 +29,6 @@ export const spec: OpenAPIV3_1.Document & Record<string, unknown> = {
       bearerAuth: [],
     },
   ],
-  hideUntagged: true,
 };
 
 export function addSpecPaths(paths: OpenAPIV3_1.PathsObject): void {

@@ -1,17 +1,18 @@
 import { memoryStore } from 'cache-manager';
-import { asRoute } from '../lib/util/typings';
-import TodoService from '../services/todo.service';
+import type { FromSchema } from 'json-schema-to-ts';
+import crypto from 'node:crypto';
+import { addSpecPaths } from '../lib/docs';
 import validate, { PROP } from '../lib/util/express/validate';
 import wrapper from '../lib/util/express/wrapper';
+import { asRoute } from '../lib/util/typings';
 import {
   todoCreateSchema,
+  todoDeleteSchema,
   todoGetAllSchema,
   todoGetSchema,
   todoUpdateSchema,
-  todoDeleteSchema,
 } from '../schemas/todo.schema';
-import { addSpecPaths } from '../lib/docs';
-import type { FromSchema } from 'json-schema-to-ts';
+import TodoService from '../services/todo.service';
 
 export const prefix = '/todo';
 
@@ -153,7 +154,7 @@ void addSpecPaths({
           'application/json': {
             schema: Object.assign(todoUpdateSchema),
             example: {
-              id: '123e4567-e89b-12d3-a456-426614174000',
+              id: crypto.randomUUID(),
               content: todoUpdateSchema.properties.content.examples[0],
               done: todoUpdateSchema.properties.done.examples[0],
             },
