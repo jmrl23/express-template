@@ -35,7 +35,7 @@ export default asRoute(async function (app) {
     )
 
     .get(
-      '/',
+      '',
       wrapper(async function () {
         const todos = await todoService.getTodos();
         return {

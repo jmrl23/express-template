@@ -1,5 +1,5 @@
 export declare global {
-  // declare interface Foo {
+  // interface Foo {
   //   bar: unknown;
   // }
 }
