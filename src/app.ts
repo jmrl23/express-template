@@ -1,18 +1,18 @@
-import path from 'node:path';
-import express, { type ErrorRequestHandler } from 'express';
-import loadRoutes from './lib/util/express/loadRoutes';
-import logger from './lib/util/logger';
-import wrapper from './lib/util/express/wrapper';
 import * as colorette from 'colorette';
+import cors from 'cors';
+import express, { type ErrorRequestHandler } from 'express';
 import createHttpError, {
   HttpError,
-  NotFound,
   InternalServerError,
+  NotFound,
 } from 'http-errors';
-import morganMiddleware from './middlewares/morgan.middleware';
-import cors from 'cors';
+import morgan from 'morgan';
+import path from 'node:path';
 import swaggerUiExpress from 'swagger-ui-express';
 import { spec } from './lib/docs';
+import loadRoutes from './lib/util/express/loadRoutes';
+import wrapper from './lib/util/express/wrapper';
+import logger from './lib/util/logger';
 
 const app = express();
 
@@ -21,7 +21,16 @@ app.disable('x-powered-by');
 
 // Middlewares
 app.use(
-  morganMiddleware(),
+  morgan(
+    ':remote-addr :method :url :status :res[content-length] - :response-time ms',
+    {
+      stream: {
+        write: (message) => {
+          logger.http(colorette.gray(message.trim()));
+        },
+      },
+    },
+  ),
   cors({
     origin: '*',
   }),
@@ -58,10 +67,10 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 
 // Error handlers
 app.use(
-  wrapper((request) => {
+  wrapper(function notFoundHandler(request) {
     throw new NotFound(`Cannot ${request.method} ${request.path}`);
   }),
-  function (error, _request, response, next) {
+  function errorHandler(error, _request, response, next) {
     if (!(error instanceof HttpError) && error instanceof Error) {
       if ('statusCode' in error && typeof error.statusCode === 'number') {
         error = createHttpError(error.statusCode, error.message);
@@ -73,11 +82,9 @@ app.use(
       const responseData = {
         statusCode: error.statusCode,
         message: error.message,
-        error: error.constructor.name,
+        error: error.name,
       };
-      if (error.statusCode > 499) {
-        logger.error(error.message);
-      }
+      if (error.statusCode > 499) logger.error(error.stack);
       return response.status(error.statusCode).json(responseData);
     }
     next(error);
