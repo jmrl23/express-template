@@ -1,4 +1,4 @@
-import { memoryStore } from 'cache-manager';
+import { caching } from 'cache-manager';
 import type { FromSchema } from 'json-schema-to-ts';
 import crypto from 'node:crypto';
 import { addSpecPaths } from '../lib/docs';
@@ -12,13 +12,15 @@ import {
   todoGetSchema,
   todoUpdateSchema,
 } from '../schemas/todo.schema';
+import CacheService from '../services/cache.service';
 import TodoService from '../services/todo.service';
 
 export const prefix = '/todo';
 
 export default asRoute(async function (app) {
-  const todoServiceCacheStore = memoryStore({ ttl: 0 });
-  const todoService = await TodoService.createInstance(todoServiceCacheStore);
+  const cache = await caching('memory');
+  const cacheService = new CacheService(cache);
+  const todoService = new TodoService(cacheService);
 
   app
 

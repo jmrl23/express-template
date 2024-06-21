@@ -1,18 +1,9 @@
-import type { Store } from 'cache-manager';
 import CacheService from './cache.service';
 import crypto from 'node:crypto';
 import { NotFound } from 'http-errors';
 
 export default class TodoService {
-  private constructor(private readonly cacheService: CacheService) {}
-
-  public static async createInstance(
-    store?: Store | Promise<Store>,
-  ): Promise<TodoService> {
-    const cacheService = await CacheService.createInstance(store);
-    const instance = new TodoService(cacheService);
-    return instance;
-  }
+  constructor(private readonly cacheService: CacheService) {}
 
   public async createTodo(content: string): Promise<Todo> {
     const id = crypto.randomUUID();
