@@ -4,6 +4,7 @@ import { asJsonSchema } from '../lib/util/typings';
 export const todoSchema = asJsonSchema({
   type: 'object',
   description: 'Todo item',
+  additionalProperties: false,
   required: ['id', 'createdAt', 'updatedAt', 'content', 'done'],
   properties: {
     id: {
@@ -106,8 +107,8 @@ export type TodoDeleteSchema = FromSchema<typeof todoDeleteSchema>;
 export const todoResponse200 = asJsonSchema({
   type: 'object',
   description: 'Response todo item',
-  required: ['todo'],
   additionalProperties: false,
+  required: ['todo'],
   properties: {
     todo: { ...todoSchema, nullable: true },
   },
@@ -117,8 +118,8 @@ export type TodoResponse200 = FromSchema<typeof todoResponse200>;
 export const todosResponse200 = asJsonSchema({
   type: 'object',
   description: 'Response todo items',
-  required: ['todos'],
   additionalProperties: false,
+  required: ['todos'],
   properties: {
     todos: {
       type: 'array',
