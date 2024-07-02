@@ -4,16 +4,16 @@ import validate from '../lib/util/express/validate';
 import wrapper from '../lib/util/express/wrapper';
 import { asRoute } from '../lib/util/typings';
 import {
-  TodoCreateSchema,
+  TodoCreate,
   todoCreateSchema,
-  TodoDeleteSchema,
+  TodoDelete,
   todoDeleteSchema,
   todoGetAllSchema,
-  TodoGetSchema,
+  TodoGet,
   todoGetSchema,
-  todoResponse200,
-  todosResponse200,
-  TodoUpdateSchema,
+  responseTodoOKSchema,
+  responseTodosOKSchema,
+  TodoUpdate,
   todoUpdateSchema,
 } from '../schemas/todo';
 import CacheService from '../services/CacheService';
@@ -31,7 +31,7 @@ export default asRoute(async function todoRoute(app) {
     .post(
       '/create',
       validate('body', todoCreateSchema),
-      wrapper<TodoCreateSchema>(async function (request) {
+      wrapper<TodoCreate>(async function (request) {
         const { content } = request.body;
         const todo = await todoService.createTodo(content);
         return {
@@ -53,7 +53,7 @@ export default asRoute(async function todoRoute(app) {
     .get(
       '/:id',
       validate('params', todoGetSchema),
-      wrapper<unknown, TodoGetSchema>(async function (request) {
+      wrapper<unknown, TodoGet>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.getTodo(id);
         return {
@@ -65,7 +65,7 @@ export default asRoute(async function todoRoute(app) {
     .patch(
       '/update',
       validate('body', todoUpdateSchema),
-      wrapper<TodoUpdateSchema>(async function (request) {
+      wrapper<TodoUpdate>(async function (request) {
         const { id, content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
@@ -77,7 +77,7 @@ export default asRoute(async function todoRoute(app) {
     .delete(
       '/delete/:id',
       validate('params', todoDeleteSchema),
-      wrapper<unknown, TodoDeleteSchema>(async function (request) {
+      wrapper<unknown, TodoDelete>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.deleteTodo(id);
         return {
@@ -106,10 +106,10 @@ void addSpecPaths({
       },
       responses: {
         '200': {
-          description: 'Default Response',
+          description: responseTodoOKSchema.description,
           content: {
             'application/json': {
-              schema: Object.assign(todoResponse200),
+              schema: Object.assign(responseTodoOKSchema),
             },
           },
         },
@@ -123,10 +123,10 @@ void addSpecPaths({
       tags: ['todo'],
       responses: {
         '200': {
-          description: 'Default Response',
+          description: responseTodosOKSchema.description,
           content: {
             'application/json': {
-              schema: Object.assign(todosResponse200),
+              schema: Object.assign(responseTodosOKSchema),
             },
           },
         },
@@ -146,10 +146,10 @@ void addSpecPaths({
       })),
       responses: {
         '200': {
-          description: 'Default Response',
+          description: responseTodoOKSchema.description,
           content: {
             'application/json': {
-              schema: Object.assign(todoResponse200),
+              schema: Object.assign(responseTodoOKSchema),
             },
           },
         },
@@ -176,10 +176,10 @@ void addSpecPaths({
       },
       responses: {
         '200': {
-          description: 'Default Response',
+          description: responseTodoOKSchema.description,
           content: {
             'application/json': {
-              schema: Object.assign(todoResponse200),
+              schema: Object.assign(responseTodoOKSchema),
             },
           },
         },
@@ -199,10 +199,10 @@ void addSpecPaths({
       })),
       responses: {
         '200': {
-          description: 'Default Response',
+          description: responseTodoOKSchema.description,
           content: {
             'application/json': {
-              schema: Object.assign(todoResponse200),
+              schema: Object.assign(responseTodoOKSchema),
             },
           },
         },

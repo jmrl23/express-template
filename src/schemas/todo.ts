@@ -29,7 +29,7 @@ export const todoSchema = asJsonSchema({
     },
   },
 });
-export type TodoSchema = FromSchema<typeof todoSchema>;
+export type Todo = FromSchema<typeof todoSchema>;
 
 export const todoCreateSchema = asJsonSchema({
   type: 'object',
@@ -44,14 +44,14 @@ export const todoCreateSchema = asJsonSchema({
     },
   },
 });
-export type TodoCreateSchema = FromSchema<typeof todoCreateSchema>;
+export type TodoCreate = FromSchema<typeof todoCreateSchema>;
 
 export const todoGetAllSchema = asJsonSchema({
   type: 'object',
   description: 'Get todo items',
   additionalProperties: false,
 });
-export type TodoGetAllSchema = FromSchema<typeof todoGetAllSchema>;
+export type TodoGetAll = FromSchema<typeof todoGetAllSchema>;
 
 export const todoGetSchema = asJsonSchema({
   type: 'object',
@@ -65,7 +65,7 @@ export const todoGetSchema = asJsonSchema({
     },
   },
 });
-export type TodoGetSchema = FromSchema<typeof todoGetSchema>;
+export type TodoGet = FromSchema<typeof todoGetSchema>;
 
 export const todoUpdateSchema = asJsonSchema({
   type: 'object',
@@ -88,7 +88,7 @@ export const todoUpdateSchema = asJsonSchema({
     },
   },
 });
-export type TodoUpdateSchema = FromSchema<typeof todoUpdateSchema>;
+export type TodoUpdate = FromSchema<typeof todoUpdateSchema>;
 
 export const todoDeleteSchema = asJsonSchema({
   type: 'object',
@@ -102,9 +102,9 @@ export const todoDeleteSchema = asJsonSchema({
     },
   },
 });
-export type TodoDeleteSchema = FromSchema<typeof todoDeleteSchema>;
+export type TodoDelete = FromSchema<typeof todoDeleteSchema>;
 
-export const todoResponse200 = asJsonSchema({
+export const responseTodoOKSchema = asJsonSchema({
   type: 'object',
   description: 'Response todo item',
   additionalProperties: false,
@@ -113,9 +113,9 @@ export const todoResponse200 = asJsonSchema({
     todo: { ...todoSchema, nullable: true },
   },
 });
-export type TodoResponse200 = FromSchema<typeof todoResponse200>;
+export type ResponseTodoOK = FromSchema<typeof responseTodoOKSchema>;
 
-export const todosResponse200 = asJsonSchema({
+export const responseTodosOKSchema = asJsonSchema({
   type: 'object',
   description: 'Response todo items',
   additionalProperties: false,
@@ -127,4 +127,4 @@ export const todosResponse200 = asJsonSchema({
     },
   },
 });
-export type TodosResponse200 = FromSchema<typeof todoResponse200>;
+export type ResponseTodosOK = FromSchema<typeof responseTodosOKSchema>;
