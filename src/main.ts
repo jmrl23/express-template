@@ -1,5 +1,5 @@
 import './init';
-import { SERVER_HOST, PORT } from './lib/constant/environment';
+import { SERVER_HOST, PORT } from './lib/constant/env';
 import detectPort from 'detect-port';
 import server from './server';
 import * as c from 'colorette';
@@ -10,7 +10,7 @@ async function main() {
   const port = await detectPort(PORT);
 
   server.listen({ host, port }, function () {
-    logger.info(`Running on port ${c.bold(c.yellow(port))}`);
+    logger.info(`${c.bold('server port')} ${port}`);
   });
 }
 

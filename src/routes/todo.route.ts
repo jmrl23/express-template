@@ -1,24 +1,28 @@
-import { caching } from 'cache-manager';
-import type { FromSchema } from 'json-schema-to-ts';
-import crypto from 'node:crypto';
+import { caching, memoryStore } from 'cache-manager';
 import { addSpecPaths } from '../lib/docs';
-import validate, { PROP } from '../lib/util/express/validate';
+import validate from '../lib/util/express/validate';
 import wrapper from '../lib/util/express/wrapper';
 import { asRoute } from '../lib/util/typings';
 import {
+  TodoCreateSchema,
   todoCreateSchema,
+  TodoDeleteSchema,
   todoDeleteSchema,
   todoGetAllSchema,
+  TodoGetSchema,
   todoGetSchema,
+  todoResponse200,
+  todosResponse200,
+  TodoUpdateSchema,
   todoUpdateSchema,
-} from '../schemas/todo.schema';
-import CacheService from '../services/cache.service';
-import TodoService from '../services/todo.service';
+} from '../schemas/todo';
+import CacheService from '../services/CacheService';
+import TodoService from '../services/TodoService';
 
 export const prefix = '/todo';
 
-export default asRoute(async function (app) {
-  const cache = await caching('memory');
+export default asRoute(async function todoRoute(app) {
+  const cache = await caching(memoryStore({ ttl: 0 }));
   const cacheService = new CacheService(cache);
   const todoService = new TodoService(cacheService);
 
@@ -26,8 +30,8 @@ export default asRoute(async function (app) {
 
     .post(
       '/create',
-      validate(PROP.Body, todoCreateSchema),
-      wrapper<FromSchema<typeof todoCreateSchema>>(async function (request) {
+      validate('body', todoCreateSchema),
+      wrapper<TodoCreateSchema>(async function (request) {
         const { content } = request.body;
         const todo = await todoService.createTodo(content);
         return {
@@ -48,22 +52,20 @@ export default asRoute(async function (app) {
 
     .get(
       '/:id',
-      validate(PROP.Params, todoGetSchema),
-      wrapper<unknown, FromSchema<typeof todoGetSchema>>(
-        async function (request) {
-          const { id } = request.params;
-          const todo = await todoService.getTodo(id);
-          return {
-            todo,
-          };
-        },
-      ),
+      validate('params', todoGetSchema),
+      wrapper<unknown, TodoGetSchema>(async function (request) {
+        const { id } = request.params;
+        const todo = await todoService.getTodo(id);
+        return {
+          todo,
+        };
+      }),
     )
 
     .patch(
       '/update',
-      validate(PROP.Body, todoUpdateSchema),
-      wrapper<FromSchema<typeof todoUpdateSchema>>(async function (request) {
+      validate('body', todoUpdateSchema),
+      wrapper<TodoUpdateSchema>(async function (request) {
         const { id, content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
@@ -74,16 +76,14 @@ export default asRoute(async function (app) {
 
     .delete(
       '/delete/:id',
-      validate(PROP.Params, todoDeleteSchema),
-      wrapper<unknown, FromSchema<typeof todoDeleteSchema>>(
-        async function (request) {
-          const { id } = request.params;
-          const todo = await todoService.deleteTodo(id);
-          return {
-            todo,
-          };
-        },
-      ),
+      validate('params', todoDeleteSchema),
+      wrapper<unknown, TodoDeleteSchema>(async function (request) {
+        const { id } = request.params;
+        const todo = await todoService.deleteTodo(id);
+        return {
+          todo,
+        };
+      }),
     );
 });
 
@@ -93,7 +93,6 @@ void addSpecPaths({
     post: {
       description: todoCreateSchema.description,
       tags: ['todo'],
-      security: [],
       requestBody: {
         required: true,
         content: {
@@ -108,6 +107,11 @@ void addSpecPaths({
       responses: {
         '200': {
           description: 'Default Response',
+          content: {
+            'application/json': {
+              schema: Object.assign(todoResponse200),
+            },
+          },
         },
       },
     },
@@ -117,10 +121,14 @@ void addSpecPaths({
     get: {
       description: todoGetAllSchema.description,
       tags: ['todo'],
-      security: [],
       responses: {
         '200': {
           description: 'Default Response',
+          content: {
+            'application/json': {
+              schema: Object.assign(todosResponse200),
+            },
+          },
         },
       },
     },
@@ -130,7 +138,6 @@ void addSpecPaths({
     get: {
       description: todoGetSchema.description,
       tags: ['todo'],
-      security: [],
       parameters: Object.keys(todoGetSchema.properties).map((key) => ({
         in: 'path',
         name: key,
@@ -140,6 +147,11 @@ void addSpecPaths({
       responses: {
         '200': {
           description: 'Default Response',
+          content: {
+            'application/json': {
+              schema: Object.assign(todoResponse200),
+            },
+          },
         },
       },
     },
@@ -149,14 +161,13 @@ void addSpecPaths({
     patch: {
       description: todoUpdateSchema.description,
       tags: ['todo'],
-      security: [],
       requestBody: {
         required: true,
         content: {
           'application/json': {
             schema: Object.assign(todoUpdateSchema),
             example: {
-              id: crypto.randomUUID(),
+              id: 'c31f7ff9-3e7c-45d4-8171-3668eb0a4ac4',
               content: todoUpdateSchema.properties.content.examples[0],
               done: todoUpdateSchema.properties.done.examples[0],
             },
@@ -166,6 +177,11 @@ void addSpecPaths({
       responses: {
         '200': {
           description: 'Default Response',
+          content: {
+            'application/json': {
+              schema: Object.assign(todoResponse200),
+            },
+          },
         },
       },
     },
@@ -175,7 +191,6 @@ void addSpecPaths({
     delete: {
       description: todoDeleteSchema.description,
       tags: ['todo'],
-      security: [],
       parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
         in: 'path',
         name: key,
@@ -185,6 +200,11 @@ void addSpecPaths({
       responses: {
         '200': {
           description: 'Default Response',
+          content: {
+            'application/json': {
+              schema: Object.assign(todoResponse200),
+            },
+          },
         },
       },
     },

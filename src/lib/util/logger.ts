@@ -1,31 +1,38 @@
 import { createLogger, transports as Transports, format } from 'winston';
-import * as colorette from 'colorette';
-import env from 'env-var';
+import type { LoggerOptions } from 'winston';
+import * as c from 'colorette';
 
-const loggerFormat = format.combine(
-  format.errors({ stack: true }),
-  format((info) => ({ ...info, level: info.level.toUpperCase() }))(),
-  format.colorize({ level: true }),
-  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.prettyPrint(),
-  format.splat(),
-  format.printf(
-    (info) =>
-      `${colorette.gray(`[${info.timestamp}]`)} ${colorette.bold(info.level)} ${info.message}`,
+const options = new Map<NODE_ENV_VALUE, LoggerOptions>();
+
+options.set('development', {
+  level: 'debug',
+  format: format.combine(
+    format.errors({ stack: true }),
+    format.timestamp(),
+    format.splat(),
+    format.colorize({ level: true }),
+    format.prettyPrint(),
+    format.printf(
+      ({ timestamp, level, message }) =>
+        `${c.gray(`[${timestamp}]`)} ${c.bold(level.padEnd(5))} ${message}`,
+    ),
   ),
-);
-
-const level =
-  env.get('NODE_ENV').default('development').asString() === 'development'
-    ? 'debug'
-    : 'info';
-
-const transports = [new Transports.Console()];
-
-const logger = createLogger({
-  level,
-  format: loggerFormat,
-  transports,
+  transports: [new Transports.Console()],
 });
+
+options.set('production', {
+  level: 'info',
+  format: format.combine(
+    format.errors({ stack: true }),
+    format.timestamp(),
+    format.uncolorize(),
+    format.json(),
+  ),
+  transports: [new Transports.Console()],
+});
+
+const logger = createLogger(
+  options.get(process.env.NODE_ENV as NODE_ENV_VALUE),
+);
 
 export default logger;

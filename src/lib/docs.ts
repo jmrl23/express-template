@@ -14,21 +14,15 @@ export const spec: OpenAPIV3_1.Document & Record<string, unknown> = {
     version: '0.0.1',
   },
   servers,
-  tags: [],
   paths: {},
   components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-      },
-    },
+    // securitySchemes: {
+    //   bearerAuth: {
+    //     type: 'http',
+    //     scheme: 'bearer',
+    //   },
+    // },
   },
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
 };
 
 export function addSpecPaths(paths: OpenAPIV3_1.PathsObject): void {

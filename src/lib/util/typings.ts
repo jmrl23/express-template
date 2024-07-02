@@ -3,10 +3,9 @@ import type { Router } from 'express';
 
 export type Schema = JSONSchema & Record<string, unknown>;
 
-export function asJsonSchema<T extends Schema>(schema: T): T {
+export function asJsonSchema<const T extends Schema>(schema: T): T {
   return schema;
 }
-
 interface RouteFunction {
   (router: Router): unknown;
 }

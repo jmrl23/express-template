@@ -20,6 +20,7 @@
     "dotenv-cli": "^7.4.2",
     "env-var": "^7.5.0",
     "express": "^4.19.2",
+    "glob": "^10.4.2",
     "http-errors": "^2.0.0",
     "json-schema-to-ts": "^3.1.0",
     "morgan": "^1.10.0",

@@ -1,4 +1,4 @@
-import * as colorette from 'colorette';
+import * as c from 'colorette';
 import cors from 'cors';
 import express, { type ErrorRequestHandler } from 'express';
 import createHttpError, {
@@ -10,7 +10,7 @@ import morgan from 'morgan';
 import path from 'node:path';
 import swaggerUiExpress from 'swagger-ui-express';
 import { spec } from './lib/docs';
-import loadRoutes from './lib/util/express/loadRoutes';
+import routes from './lib/util/express/routes';
 import wrapper from './lib/util/express/wrapper';
 import logger from './lib/util/logger';
 
@@ -25,8 +25,8 @@ app.use(
     ':remote-addr :method :url :status :res[content-length] - :response-time ms',
     {
       stream: {
-        write: (message) => {
-          logger.http(colorette.gray(message.trim()));
+        write(message) {
+          logger.http(`${c.bold('morgan')} ${c.gray(message.trim())}`);
         },
       },
     },
@@ -43,19 +43,15 @@ app.use(
 );
 
 // Load route files
-const routesDir = path.resolve(__dirname, 'routes');
-loadRoutes(app, routesDir, function (routeFiles) {
-  for (const filePath of routeFiles) {
-    const file = filePath
-      .replace(/[\\\/]/g, '/')
-      .substring(routesDir.length + 1);
-    logger.info(
-      `Route %s {%s}`,
-      colorette.yellow('Registered'),
-      colorette.magentaBright(file),
-    );
-  }
-});
+routes(
+  app,
+  path.resolve(__dirname, 'routes'),
+  function routesCallback(routeFiles) {
+    for (const filePath of routeFiles) {
+      logger.info(`${c.bold('registered route')} ${filePath}`);
+    }
+  },
+);
 
 // Swagger UI
 app

@@ -6,14 +6,12 @@ import { BadRequest } from 'http-errors';
 import type { RequestHandler } from 'express';
 import type { Schema } from '../typings';
 
-export enum PROP {
-  Params = 'params',
-  Body = 'body',
-  Query = 'query',
-}
+const PROPS = ['params', 'body', 'query'] as const;
+
+type Prop = (typeof PROPS)[number];
 
 export default function validate(
-  prop: PROP,
+  prop: Prop,
   schema: Schema,
   options: Options = {},
 ): RequestHandler {

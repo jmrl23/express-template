@@ -1,43 +1,43 @@
 import { Router } from 'express';
 import type { Express } from 'express-serve-static-core';
-import getFileList from '../getFileList';
+import { globSync } from 'glob';
 import path from 'node:path';
 
-export default function loadRoutes(
+/**
+ * route file rules:
+ * - name must ends with `.route.{ts,js}`
+ * - must export default a route function
+ * - prefix can be alter by exporting a prefix
+ */
+
+export default function routes(
   app: Express,
   dirPath: string,
-  callback?: LoadRoutesCallback,
+  callback?: Callback,
 ): void {
-  const files = getFileList(dirPath);
-  const routeFiles = files.filter((file) => {
-    const extensions = ['js', 'ts'];
-    const fileName = path.basename(file);
-    const isRouteFile = extensions.some((ext) =>
-      fileName.toLowerCase().endsWith(`.route.${ext}`),
-    );
-    return isRouteFile;
+  const files = globSync([`${dirPath}/**/*.route.{ts,js}`], {
+    absolute: true,
   });
-  const loadedRoutes: string[] = [];
-
-  for (const routeFile of routeFiles) {
+  const registeredRouteFiles: string[] = [];
+  for (const routeFile of files) {
     const { default: routeFunction, prefix: p, router: r } = require(routeFile);
     if (!(routeFunction instanceof Function)) continue;
     if (r && Object.getPrototypeOf(r) !== Router)
       throw new Error('Invalid route router');
     if (p && typeof p !== 'string') throw new Error('Invalid route prefix');
-    const _path = routeFile.replace(/[\\\/]/g, '/').substring(dirPath.length);
+    const _path = routeFile.replace(/[\\/]/g, '/').substring(dirPath.length);
     const fileName = path.basename(routeFile);
     const prefix =
       p ?? (_path.substring(0, _path.length - fileName.length - 1) || '/');
     const router = r ?? Router();
     app.use(prefix, router);
     routeFunction(router);
-    loadedRoutes.push(routeFile);
+    registeredRouteFiles.push(routeFile);
   }
 
-  callback?.(loadedRoutes);
+  callback?.(registeredRouteFiles);
 }
 
-interface LoadRoutesCallback {
+interface Callback {
   (routeFiles: string[]): void;
 }
