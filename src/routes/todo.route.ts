@@ -1,5 +1,5 @@
 import { caching, memoryStore } from 'cache-manager';
-import { addSpecPaths } from '../lib/docs';
+import { addSpecPaths } from '../lib/swagger';
 import validate from '../lib/util/express/validate';
 import wrapper from '../lib/util/express/wrapper';
 import { asRoute } from '../lib/util/typings';

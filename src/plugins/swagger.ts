@@ -1,8 +1,8 @@
 import swaggerUiExpress from 'swagger-ui-express';
-import { spec } from '../lib/docs';
+import { spec } from '../lib/swagger';
 import { asPlugin } from '../lib/util/typings';
 
-export default asPlugin<Options>(async function swagger(app, options) {
+export default asPlugin(async function swagger(app, options: Options) {
   const { routePrefix } = options;
 
   app

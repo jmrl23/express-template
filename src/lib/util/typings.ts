@@ -14,10 +14,11 @@ export function asRoute(fn: RouteFunction): RouteFunction {
   return fn;
 }
 
-interface PluginFn<Options> {
-  (app: Application, options: Options): Promise<void>;
-  (app: Application, options?: Options & any): Promise<void>;
-}
-export function asPlugin<Options>(fn: PluginFn<Options>): PluginFn<Options> {
+type PluginFn<Options> = Options extends undefined
+  ? (app: Application, options?: never) => Promise<void>
+  : (app: Application, options: Options) => Promise<void>;
+export function asPlugin<Options = undefined>(
+  fn: PluginFn<Options>,
+): PluginFn<Options> {
   return fn;
 }
