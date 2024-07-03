@@ -5,7 +5,6 @@ import app from './app';
 import { PORT, SERVER_HOST } from './lib/constant/env';
 import logger from './lib/util/logger';
 import setup from './plugins/setup';
-import server from './server';
 
 async function main() {
   const host = SERVER_HOST;
@@ -13,7 +12,7 @@ async function main() {
 
   await setup(app, {});
 
-  server.listen({ host, port }, function () {
+  app.listen({ host, port }, function () {
     logger.info(`${c.bold('server port')} ${port}`);
   });
 }
