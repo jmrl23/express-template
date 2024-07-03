@@ -1,18 +1,17 @@
 import { caching, memoryStore } from 'cache-manager';
 import { addSpecPaths } from '../lib/swagger';
-import validate from '../lib/util/express/validate';
-import wrapper from '../lib/util/express/wrapper';
+import { validate, wrapper } from '../lib/util/express';
 import { asRoute } from '../lib/util/typings';
 import {
+  responseTodoOKSchema,
+  responseTodosOKSchema,
   TodoCreate,
   todoCreateSchema,
   TodoDelete,
   todoDeleteSchema,
-  todoGetAllSchema,
   TodoGet,
+  todoGetAllSchema,
   todoGetSchema,
-  responseTodoOKSchema,
-  responseTodosOKSchema,
   TodoUpdate,
   todoUpdateSchema,
 } from '../schemas/todo';
@@ -31,7 +30,7 @@ export default asRoute(async function todoRoute(app) {
     .post(
       '/create',
       validate('body', todoCreateSchema),
-      wrapper<TodoCreate>(async function (request) {
+      wrapper<{ body: TodoCreate }>(async function (request) {
         const { content } = request.body;
         const todo = await todoService.createTodo(content);
         return {
@@ -53,7 +52,7 @@ export default asRoute(async function todoRoute(app) {
     .get(
       '/:id',
       validate('params', todoGetSchema),
-      wrapper<unknown, TodoGet>(async function (request) {
+      wrapper<{ params: TodoGet }>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.getTodo(id);
         return {
@@ -65,7 +64,7 @@ export default asRoute(async function todoRoute(app) {
     .patch(
       '/update',
       validate('body', todoUpdateSchema),
-      wrapper<TodoUpdate>(async function (request) {
+      wrapper<{ body: TodoUpdate }>(async function (request) {
         const { id, content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
@@ -77,7 +76,7 @@ export default asRoute(async function todoRoute(app) {
     .delete(
       '/delete/:id',
       validate('params', todoDeleteSchema),
-      wrapper<unknown, TodoDelete>(async function (request) {
+      wrapper<{ params: TodoDelete }>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.deleteTodo(id);
         return {
@@ -166,11 +165,6 @@ void addSpecPaths({
         content: {
           'application/json': {
             schema: Object.assign(todoUpdateSchema),
-            example: {
-              id: 'c31f7ff9-3e7c-45d4-8171-3668eb0a4ac4',
-              content: todoUpdateSchema.properties.content.examples[0],
-              done: todoUpdateSchema.properties.done.examples[0],
-            },
           },
         },
       },

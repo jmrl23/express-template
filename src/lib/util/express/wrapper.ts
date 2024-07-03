@@ -1,21 +1,7 @@
 import type { RequestHandler } from 'express';
-import type {
-  Query,
-  ParamsDictionary,
-  Locals as _Locals,
-} from 'express-serve-static-core';
 
-export default function wrapper<
-  ReqBody = any,
-  ReqParams = unknown,
-  ReqQuery = unknown,
->(
-  requestHandler: RequestHandler<
-    ReqParams & ParamsDictionary,
-    any,
-    ReqBody,
-    ReqQuery & Query
-  >,
+export default function wrapper<T extends Payload>(
+  requestHandler: RequestHandler<T['params'], any, T['body'], T['query']>,
 ): typeof requestHandler {
   return async function (request, response, next) {
     try {
@@ -30,3 +16,6 @@ export default function wrapper<
     }
   };
 }
+
+interface Payload
+  extends Partial<Record<'params' | 'query' | 'body', unknown>> {}
