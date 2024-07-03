@@ -16,9 +16,8 @@ export function asRoute(fn: RouteFunction): RouteFunction {
 
 interface PluginFn<Options> {
   (app: Application, options: Options): Promise<void>;
+  (app: Application, options?: Options & any): Promise<void>;
 }
-export function asPlugin<Options = {}>(
-  fn: PluginFn<Options>,
-): PluginFn<Options> {
+export function asPlugin<Options>(fn: PluginFn<Options>): PluginFn<Options> {
   return fn;
 }

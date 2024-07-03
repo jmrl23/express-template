@@ -10,7 +10,7 @@ async function main() {
   const host = SERVER_HOST;
   const port = await detectPort(PORT);
 
-  await bootstrap(app, {});
+  await bootstrap(app);
 
   app.listen({ host, port }, function () {
     logger.info(`${c.bold('server port')} ${port}`);

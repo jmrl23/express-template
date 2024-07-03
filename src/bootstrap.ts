@@ -21,13 +21,13 @@ import swagger from './plugins/swagger';
  * configurations of the main app instance.
  */
 export default asPlugin(async function bootstrap(app) {
-  await middleware(app, {});
+  await middleware(app);
 
   await routes(app, {
     dirPath: path.resolve(__dirname, './routes'),
-    callback(routeFiles) {
-      for (const filePath of routeFiles) {
-        logger.info(`${c.bold('registered route')} ${filePath}`);
+    callback(routes) {
+      for (const route of routes) {
+        logger.info(`${c.bold('registered route')} ${route}`);
       }
     },
   });
