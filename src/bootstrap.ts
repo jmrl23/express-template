@@ -1,6 +1,3 @@
-/**
- * Main entry point for plugins
- */
 import * as c from 'colorette';
 import type { Application, ErrorRequestHandler } from 'express';
 import express from 'express';
@@ -10,22 +7,24 @@ import createHttpError, {
   NotFound,
 } from 'http-errors';
 import path from 'node:path';
-import wrapper from '../lib/util/express/wrapper';
-import logger from '../lib/util/logger';
-import { asPlugin } from '../lib/util/typings';
-import middleware from './middleware';
-import routes from './routes';
-import swagger from './swagger';
+import wrapper from './lib/util/express/wrapper';
+import logger from './lib/util/logger';
+import { asPlugin } from './lib/util/typings';
+import middleware from './plugins/middleware';
+import routes from './plugins/routes';
+import swagger from './plugins/swagger';
 
-export default asPlugin(async function setup(app) {
-  // -- PRE
-  await preConfigure(app);
-  // -- PRE END
-
+/**
+ * bootstraps all plugins and configurations
+ *
+ * this serves as the main entrypoint for plugins and
+ * configurations of the main app instance.
+ */
+export default asPlugin(async function bootstrap(app) {
   await middleware(app, {});
 
   await routes(app, {
-    dirPath: path.resolve(__dirname, '../routes'),
+    dirPath: path.resolve(__dirname, './routes'),
     callback(routeFiles) {
       for (const filePath of routeFiles) {
         logger.info(`${c.bold('registered route')} ${filePath}`);
@@ -37,19 +36,16 @@ export default asPlugin(async function setup(app) {
     routePrefix: '/docs',
   });
 
-  // -- POST
-  await postConfigure(app);
-  // -- POST END
+  await postConfigurations(app);
 });
 
-// execute before anything
-async function preConfigure(app: Application) {
-  app.disable('x-powered-by');
-}
-
-// execute after anything
-async function postConfigure(app: Application) {
+/**
+ * should only be applied **after** everything else
+ */
+async function postConfigurations(app: Application) {
   app.use('/', express.static(path.resolve(__dirname, '../../public')));
+
+  // error handlers
   app.use(
     wrapper(function notFoundHandler(request) {
       throw new NotFound(`Cannot ${request.method} ${request.path}`);
