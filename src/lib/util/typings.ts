@@ -6,10 +6,18 @@ export type Schema = JSONSchema & Record<string, unknown>;
 export function asJsonSchema<const T extends Schema>(schema: T): T {
   return schema;
 }
+
 interface RouteFunction {
-  (router: Router): Promise<unknown>;
+  (router: Router): Promise<void>;
+}
+export function asRoute(fn: RouteFunction): RouteFunction {
+  return fn;
 }
 
-export function asRoute(fn: RouteFunction): RouteFunction {
+interface PluginFn<Options> {
+  (app: Application, options: Options): Promise<void>;
+  (app: Application, options?: Options & any): Promise<void>;
+}
+export function asPlugin<Options>(fn: PluginFn<Options>): PluginFn<Options> {
   return fn;
 }
