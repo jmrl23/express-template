@@ -1,9 +1,6 @@
 import env from 'env-var';
 
-export const NODE_ENV: NODE_ENV_VALUE = env
-  .get('NODE_ENV')
-  .default('development')
-  .asEnum(['development', 'production', 'test']);
+export const NODE_ENV = process.env.NODE_ENV;
 
 export const SERVER_HOST = env.get('SERVER_HOST').default('0.0.0.0').asString();
 

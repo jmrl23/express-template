@@ -1,3 +1,5 @@
 export declare global {
-  type NODE_ENV_VALUE = 'development' | 'production' | 'test';
+  // interface Foo {
+  //   bar: unknown;
+  // }
 }

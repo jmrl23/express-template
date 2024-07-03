@@ -1,28 +1,48 @@
-// Warn: Do not import variables from `src/lib/constant/env.ts` here.
-
 import * as c from 'colorette';
 import dotenv from 'dotenv';
-import env from 'env-var';
 import { globSync } from 'glob';
+import path from 'node:path';
 import logger from './lib/util/logger';
 
 console.clear();
 
-export const NODE_ENV: NODE_ENV_VALUE = env
-  .get('NODE_ENV')
-  .default('development')
-  .asEnum(['development', 'production', 'test']);
+// Set `process.env.NODE_ENV` possible values
+declare global {
+  type NodeEnv = (typeof NODE_ENV_VALUES)[number];
+  namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: NodeEnv;
+    }
+  }
+}
+const NODE_ENV_VALUES = ['development', 'production', 'test'] as const;
+if (process.env.NODE_ENV === undefined) process.env.NODE_ENV = 'development';
+if (!NODE_ENV_VALUES.includes(process.env.NODE_ENV))
+  throw new Error('Invalid `process.env.NODE_ENV` value');
+// --
 
-const envPaths = globSync(
-  ['.env', `.env.${NODE_ENV}`, '.env.local', `.env.${NODE_ENV}.local`],
+const NODE_ENV = process.env.NODE_ENV;
+const PROJECT_DIR = path.resolve(__dirname, '../');
+const ENV_PATHS = globSync(
+  [
+    path.resolve(PROJECT_DIR, '.env'),
+    path.resolve(PROJECT_DIR, `.env.${NODE_ENV}`),
+    path.resolve(PROJECT_DIR, '.env.local'),
+    path.resolve(PROJECT_DIR, `.env.${NODE_ENV}.local`),
+  ],
   { absolute: true },
 );
 
-for (const filePath of envPaths) {
+for (const envPath of ENV_PATHS) {
   const { parsed } = dotenv.config({
-    path: filePath,
+    path: envPath,
     override: true,
   });
-  if (Object.keys(parsed ?? {}).length < 1) continue;
-  logger.info(`${c.bold('registered env')} ${filePath}`);
+  const keys = Object.keys(parsed ?? {});
+  if (keys.length < 1) continue;
+  if (keys.includes('NODE_ENV')) {
+    process.env.NODE_ENV = NODE_ENV;
+    logger.warn(`Tried to alter \`NODE_ENV\` using a .env file: ${envPath}`);
+  }
+  logger.info(`${c.bold('registered env')} ${envPath}`);
 }

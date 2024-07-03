@@ -2,7 +2,7 @@ import { createLogger, transports as Transports, format } from 'winston';
 import type { LoggerOptions } from 'winston';
 import * as c from 'colorette';
 
-const options = new Map<NODE_ENV_VALUE, LoggerOptions>();
+const options = new Map<NodeEnv, LoggerOptions>();
 
 options.set('development', {
   level: 'debug',
@@ -31,8 +31,6 @@ options.set('production', {
   transports: [new Transports.Console()],
 });
 
-const logger = createLogger(
-  options.get(process.env.NODE_ENV as NODE_ENV_VALUE),
-);
+const logger = createLogger(options.get(process.env.NODE_ENV));
 
 export default logger;

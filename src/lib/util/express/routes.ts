@@ -2,6 +2,7 @@ import { Router } from 'express';
 import type { Express } from 'express-serve-static-core';
 import { globSync } from 'glob';
 import path from 'node:path';
+import types from 'node:util/types';
 
 /**
  * route file rules:
@@ -20,8 +21,8 @@ export default function routes(
   });
   const registeredRouteFiles: string[] = [];
   for (const routeFile of files) {
-    const { default: routeFunction, prefix: p, router: r } = require(routeFile);
-    if (!(routeFunction instanceof Function)) continue;
+    const { default: routeFn, prefix: p, router: r } = require(routeFile);
+    if (!types.isAsyncFunction(routeFn)) continue;
     if (r && Object.getPrototypeOf(r) !== Router)
       throw new Error('Invalid route router');
     if (p && typeof p !== 'string') throw new Error('Invalid route prefix');
@@ -31,7 +32,7 @@ export default function routes(
       p ?? (_path.substring(0, _path.length - fileName.length - 1) || '/');
     const router = r ?? Router();
     app.use(prefix, router);
-    routeFunction(router);
+    routeFn(router);
     registeredRouteFiles.push(routeFile);
   }
 
