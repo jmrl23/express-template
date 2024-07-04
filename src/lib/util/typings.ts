@@ -15,7 +15,7 @@ export function asRoute(fn: RouteFunction): RouteFunction {
 }
 
 type PluginFn<Options> = Options extends undefined
-  ? (app: Application, options?: never) => Promise<void>
+  ? (app: Application, options?: any) => Promise<void>
   : (app: Application, options: Options) => Promise<void>;
 export function asPlugin<Options = undefined>(
   fn: PluginFn<Options>,
