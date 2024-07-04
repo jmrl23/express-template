@@ -1,8 +1,8 @@
-import type { RequestHandler } from 'express';
+import type { RequestHandler, Locals } from 'express-serve-static-core';
 
-export default function wrapper<T extends Payload>(
-  requestHandler: RequestHandler<T['params'], any, T['body'], T['query']>,
-): typeof requestHandler {
+export default function wrapper<P extends Payload>(
+  requestHandler: RequestHandlerWithPayload<P>,
+): RequestHandlerWithPayload<P> {
   return async function (request, response, next) {
     try {
       const data = await Promise.resolve(
@@ -17,5 +17,12 @@ export default function wrapper<T extends Payload>(
   };
 }
 
-interface Payload
-  extends Partial<Record<'params' | 'query' | 'body', unknown>> {}
+type Keys = ['body', 'params', 'query', 'response'];
+type Payload = Partial<Record<Keys[number], unknown>>;
+type RequestHandlerWithPayload<P extends Payload> = RequestHandler<
+  P['params'],
+  P['response'],
+  P['body'],
+  P['query'],
+  Locals
+>;

@@ -6,19 +6,15 @@ import { BadRequest } from 'http-errors';
 import type { RequestHandler } from 'express';
 import type { Schema } from '../typings';
 
-const PROPS = ['params', 'body', 'query'] as const;
-
-type Prop = (typeof PROPS)[number];
-
 export default function validate(
-  prop: Prop,
+  prop: 'params' | 'body' | 'query',
   schema: Schema,
   options: Options = {},
 ): RequestHandler {
   const ajv = new Ajv({
+    ...options,
     strict: true,
     coerceTypes: true,
-    ...options,
     allErrors: true,
   });
   ajvFormats(ajv);
