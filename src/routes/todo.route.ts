@@ -1,5 +1,5 @@
 import { caching, memoryStore } from 'cache-manager';
-import { addSpecPaths } from '../lib/swagger';
+import { registerPaths } from '../lib/swagger';
 import { validate, wrapper } from '../lib/util/express';
 import { asRoute } from '../lib/util/typings';
 import {
@@ -84,123 +84,125 @@ export default asRoute(async function todoRoute(app) {
         };
       }),
     );
-});
 
-// Docs
-void addSpecPaths({
-  '/todo/create': {
-    post: {
-      description: todoCreateSchema.description,
-      tags: ['todo'],
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: Object.assign(todoCreateSchema),
-            example: {
-              content: todoCreateSchema.properties.content.examples[0],
+  /**
+   * Swagger
+   */
+  registerPaths({
+    '/todo/create': {
+      post: {
+        description: todoCreateSchema.description,
+        tags: ['todo'],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: Object.assign(todoCreateSchema),
+              example: {
+                content: todoCreateSchema.properties.content.examples[0],
+              },
             },
           },
         },
-      },
-      responses: {
-        '200': {
-          description: responseTodoOKSchema.description,
-          content: {
-            'application/json': {
-              schema: Object.assign(responseTodoOKSchema),
+        responses: {
+          '200': {
+            description: responseTodoOKSchema.description,
+            content: {
+              'application/json': {
+                schema: Object.assign(responseTodoOKSchema),
+              },
             },
           },
         },
       },
     },
-  },
 
-  '/todo': {
-    get: {
-      description: todoGetAllSchema.description,
-      tags: ['todo'],
-      responses: {
-        '200': {
-          description: responseTodosOKSchema.description,
-          content: {
-            'application/json': {
-              schema: Object.assign(responseTodosOKSchema),
+    '/todo': {
+      get: {
+        description: todoGetAllSchema.description,
+        tags: ['todo'],
+        responses: {
+          '200': {
+            description: responseTodosOKSchema.description,
+            content: {
+              'application/json': {
+                schema: Object.assign(responseTodosOKSchema),
+              },
             },
           },
         },
       },
     },
-  },
 
-  '/todo/{id}': {
-    get: {
-      description: todoGetSchema.description,
-      tags: ['todo'],
-      parameters: Object.keys(todoGetSchema.properties).map((key) => ({
-        in: 'path',
-        name: key,
-        required: Object.assign(todoGetSchema).required.includes(key),
-        schema: todoGetSchema.properties,
-      })),
-      responses: {
-        '200': {
-          description: responseTodoOKSchema.description,
-          content: {
-            'application/json': {
-              schema: Object.assign(responseTodoOKSchema),
+    '/todo/{id}': {
+      get: {
+        description: todoGetSchema.description,
+        tags: ['todo'],
+        parameters: Object.keys(todoGetSchema.properties).map((key) => ({
+          in: 'path',
+          name: key,
+          required: Object.assign(todoGetSchema).required.includes(key),
+          schema: todoGetSchema.properties,
+        })),
+        responses: {
+          '200': {
+            description: responseTodoOKSchema.description,
+            content: {
+              'application/json': {
+                schema: Object.assign(responseTodoOKSchema),
+              },
             },
           },
         },
       },
     },
-  },
 
-  '/todo/update': {
-    patch: {
-      description: todoUpdateSchema.description,
-      tags: ['todo'],
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: Object.assign(todoUpdateSchema),
-          },
-        },
-      },
-      responses: {
-        '200': {
-          description: responseTodoOKSchema.description,
+    '/todo/update': {
+      patch: {
+        description: todoUpdateSchema.description,
+        tags: ['todo'],
+        requestBody: {
+          required: true,
           content: {
             'application/json': {
-              schema: Object.assign(responseTodoOKSchema),
+              schema: Object.assign(todoUpdateSchema),
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: responseTodoOKSchema.description,
+            content: {
+              'application/json': {
+                schema: Object.assign(responseTodoOKSchema),
+              },
             },
           },
         },
       },
     },
-  },
 
-  '/todo/delete/{id}': {
-    delete: {
-      description: todoDeleteSchema.description,
-      tags: ['todo'],
-      parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
-        in: 'path',
-        name: key,
-        required: Object.assign(todoDeleteSchema).required.includes(key),
-        schema: todoDeleteSchema.properties,
-      })),
-      responses: {
-        '200': {
-          description: responseTodoOKSchema.description,
-          content: {
-            'application/json': {
-              schema: Object.assign(responseTodoOKSchema),
+    '/todo/delete/{id}': {
+      delete: {
+        description: todoDeleteSchema.description,
+        tags: ['todo'],
+        parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
+          in: 'path',
+          name: key,
+          required: Object.assign(todoDeleteSchema).required.includes(key),
+          schema: todoDeleteSchema.properties,
+        })),
+        responses: {
+          '200': {
+            description: responseTodoOKSchema.description,
+            content: {
+              'application/json': {
+                schema: Object.assign(responseTodoOKSchema),
+              },
             },
           },
         },
       },
     },
-  },
+  });
 });

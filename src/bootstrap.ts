@@ -17,10 +17,12 @@ import swagger from './plugins/swagger';
 /**
  * bootstraps all plugins and configurations
  *
- * this serves as the main entrypoint for plugins and
- * configurations of the main app instance.
+ * this serves as the main entry point of every core plugins and
+ * configurations in main app instance.
  */
 export default asPlugin(async function bootstrap(app) {
+  app.disable('x-powered-by');
+
   await middleware(app);
 
   await routes(app, {
@@ -45,7 +47,7 @@ export default asPlugin(async function bootstrap(app) {
 async function postConfigurations(app: Application) {
   app.use('/', express.static(path.resolve(__dirname, '../../public')));
 
-  // error handlers
+  // custom error handlers
   app.use(
     wrapper(function notFoundHandler(request) {
       throw new NotFound(`Cannot ${request.method} ${request.path}`);
