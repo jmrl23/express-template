@@ -1,4 +1,9 @@
-import type { RequestHandler, Locals } from 'express-serve-static-core';
+import type {
+  Locals,
+  RequestHandler,
+  Query,
+  ParamsDictionary,
+} from 'express-serve-static-core';
 
 export default function wrapper<P extends Payload>(
   requestHandler: RequestHandlerWithPayload<P>,
@@ -10,7 +15,7 @@ export default function wrapper<P extends Payload>(
       );
       if (data === undefined) return;
       if (typeof data === 'object') return response.json(data);
-      response.send((data as unknown)?.toString());
+      response.send(data);
     } catch (error) {
       if (!response.headersSent) next(error);
     }
@@ -19,10 +24,11 @@ export default function wrapper<P extends Payload>(
 
 type Keys = ['body', 'params', 'query', 'response'];
 type Payload = Partial<Record<Keys[number], unknown>>;
+type TypeWithFallback<T, F> = unknown extends T ? F : T;
 type RequestHandlerWithPayload<P extends Payload> = RequestHandler<
-  P['params'],
-  P['response'],
-  P['body'],
-  P['query'],
+  TypeWithFallback<P['params'], ParamsDictionary>,
+  TypeWithFallback<P['response'], any>,
+  TypeWithFallback<P['body'], any>,
+  TypeWithFallback<P['query'], Query>,
   Locals
 >;
