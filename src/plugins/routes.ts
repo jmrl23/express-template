@@ -37,7 +37,7 @@ export default asPlugin(async function routes(app, options: Options) {
       (_path.substring(0, _path.length - fileName.length - 1) || '/');
     const router = route.router ?? Router();
 
-    route.default(router);
+    route.default(router, app);
     app.use(prefix, router);
     registeredRouteFiles.push(routeFile);
   }
