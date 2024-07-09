@@ -5,9 +5,9 @@ import type {
   ParamsDictionary,
 } from 'express-serve-static-core';
 
-export default function wrapper<P extends Payload>(
-  requestHandler: RequestHandlerWithPayload<P>,
-): RequestHandlerWithPayload<P> {
+export default function wrapper<P extends WrapperPayload>(
+  requestHandler: RequestHandlerWithWrapperPayload<P>,
+): RequestHandlerWithWrapperPayload<P> {
   return async function (request, response, next) {
     try {
       const data = await Promise.resolve(
@@ -22,13 +22,18 @@ export default function wrapper<P extends Payload>(
   };
 }
 
-type Keys = ['body', 'params', 'query', 'response'];
-type Payload = Partial<Record<Keys[number], unknown>>;
+export type WrapperPayload = {
+  RequestBody?: unknown;
+  RequestParams?: unknown;
+  RequestQuery?: unknown;
+  ResponseBody?: unknown;
+};
 type TypeWithFallback<T, F> = unknown extends T ? F : T;
-type RequestHandlerWithPayload<P extends Payload> = RequestHandler<
-  TypeWithFallback<P['params'], ParamsDictionary>,
-  TypeWithFallback<P['response'], any>,
-  TypeWithFallback<P['body'], any>,
-  TypeWithFallback<P['query'], Query>,
-  Locals
->;
+type RequestHandlerWithWrapperPayload<P extends WrapperPayload> =
+  RequestHandler<
+    TypeWithFallback<P['RequestParams'], ParamsDictionary>,
+    TypeWithFallback<P['ResponseBody'], any>,
+    TypeWithFallback<P['RequestBody'], any>,
+    TypeWithFallback<P['RequestQuery'], Query>,
+    Locals
+  >;

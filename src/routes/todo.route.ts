@@ -30,7 +30,7 @@ export default asRoute(async function todoRoute(app) {
     .post(
       '/create',
       validate('body', todoCreateSchema),
-      wrapper<{ body: TodoCreate }>(async function (request) {
+      wrapper<{ RequestBody: TodoCreate }>(async function (request) {
         const { content } = request.body;
         const todo = await todoService.createTodo(content);
         return {
@@ -52,7 +52,7 @@ export default asRoute(async function todoRoute(app) {
     .get(
       '/:id',
       validate('params', todoGetSchema),
-      wrapper<{ params: TodoGet }>(async function (request) {
+      wrapper<{ RequestParams: TodoGet }>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.getTodo(id);
         return {
@@ -64,7 +64,7 @@ export default asRoute(async function todoRoute(app) {
     .patch(
       '/update',
       validate('body', todoUpdateSchema),
-      wrapper<{ body: TodoUpdate }>(async function (request) {
+      wrapper<{ RequestBody: TodoUpdate }>(async function (request) {
         const { id, content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
@@ -76,7 +76,7 @@ export default asRoute(async function todoRoute(app) {
     .delete(
       '/delete/:id',
       validate('params', todoDeleteSchema),
-      wrapper<{ params: TodoDelete }>(async function (request) {
+      wrapper<{ RequestParams: TodoDelete }>(async function (request) {
         const { id } = request.params;
         const todo = await todoService.deleteTodo(id);
         return {
