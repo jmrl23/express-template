@@ -1,4 +1,4 @@
-import wrapper, { type WrapperPayload } from './wrapper';
+import wrapper from './wrapper';
 import validate from './validate';
 
-export { wrapper, validate, type WrapperPayload };
+export { wrapper, validate };

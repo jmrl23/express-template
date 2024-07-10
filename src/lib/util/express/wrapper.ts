@@ -1,13 +1,13 @@
 import type {
   Locals,
-  RequestHandler,
+  RequestHandler as ExpressRequestHandler,
   Query,
   ParamsDictionary,
 } from 'express-serve-static-core';
 
-export default function wrapper<P extends WrapperPayload>(
-  requestHandler: RequestHandlerWithWrapperPayload<P>,
-): RequestHandlerWithWrapperPayload<P> {
+export default function wrapper<P extends Payload>(
+  requestHandler: RequestHandler<P>,
+): RequestHandler<P> {
   return async function (request, response, next) {
     try {
       const data = await Promise.resolve(
@@ -22,18 +22,17 @@ export default function wrapper<P extends WrapperPayload>(
   };
 }
 
-export type WrapperPayload = {
+type Payload = {
   RequestBody?: unknown;
   RequestParams?: unknown;
   RequestQuery?: unknown;
   ResponseBody?: unknown;
 };
 type TypeWithFallback<T, F> = unknown extends T ? F : T;
-type RequestHandlerWithWrapperPayload<P extends WrapperPayload> =
-  RequestHandler<
-    TypeWithFallback<P['RequestParams'], ParamsDictionary>,
-    TypeWithFallback<P['ResponseBody'], any>,
-    TypeWithFallback<P['RequestBody'], any>,
-    TypeWithFallback<P['RequestQuery'], Query>,
-    Locals
-  >;
+type RequestHandler<P extends Payload> = ExpressRequestHandler<
+  TypeWithFallback<P['RequestParams'], ParamsDictionary>,
+  TypeWithFallback<P['ResponseBody'], any>,
+  TypeWithFallback<P['RequestBody'], any>,
+  TypeWithFallback<P['RequestQuery'], Query>,
+  Locals
+>;
