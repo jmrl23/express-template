@@ -45,7 +45,7 @@ export default asPlugin(async function bootstrap(app) {
  * should only be applied **after** everything else
  */
 async function postConfigurations(app: Application) {
-  app.use('/', express.static(path.resolve(__dirname, '../../public')));
+  app.use('/', express.static(path.resolve(__dirname, '../public')));
 
   // custom error handlers
   app.use(
