@@ -8,7 +8,8 @@ import path from 'node:path';
  * route file rules:
  * - name must ends with `.route.{ts,js}`
  * - must export default a route function
- * - prefix can be alter by exporting a prefix
+ * - prefix can be alter by exporting a prefix variable,
+ *   example: `export const prefix = '/example'`
  */
 
 export default asPlugin(async function routes(app, options: Options) {

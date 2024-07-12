@@ -6,7 +6,8 @@ import logger from './lib/util/logger';
 
 console.clear();
 
-// Set `process.env.NODE_ENV` possible values
+// possible values for `process.env.NODE_ENV`
+const NODE_ENV_VALUES = ['development', 'production', 'test'] as const;
 declare global {
   type NodeEnv = (typeof NODE_ENV_VALUES)[number];
   namespace NodeJS {
@@ -15,7 +16,6 @@ declare global {
     }
   }
 }
-const NODE_ENV_VALUES = ['development', 'production', 'test'] as const;
 if (process.env.NODE_ENV === undefined) process.env.NODE_ENV = 'development';
 if (!NODE_ENV_VALUES.includes(process.env.NODE_ENV))
   throw new Error('Invalid `process.env.NODE_ENV` value');
@@ -33,6 +33,7 @@ const ENV_PATHS = globSync(
   { absolute: true },
 );
 
+// load from `.env` files
 for (const envPath of ENV_PATHS) {
   const { parsed } = dotenv.config({
     path: envPath,

@@ -1,7 +1,7 @@
 import type { OpenAPIV3_1 } from 'openapi-types';
 
 /**
- * Swagger paths
+ * Swagger spec paths, do not remove
  */
 export const paths: OpenAPIV3_1.PathsObject = {};
 

@@ -18,7 +18,7 @@ import {
 import CacheService from '../services/CacheService';
 import TodoService from '../services/TodoService';
 
-export const prefix = '/todo';
+export const prefix = '/todos';
 
 export default asRoute(async function todoRoute(app) {
   const cache = await caching(memoryStore({ ttl: 0 }));
@@ -86,10 +86,10 @@ export default asRoute(async function todoRoute(app) {
     );
 
   /**
-   * Swagger
+   * Paths
    */
   registerPaths({
-    '/todo/create': {
+    '/todos/create': {
       post: {
         description: todoCreateSchema.description,
         tags: ['todo'],
@@ -117,7 +117,7 @@ export default asRoute(async function todoRoute(app) {
       },
     },
 
-    '/todo': {
+    '/todos': {
       get: {
         description: todoGetAllSchema.description,
         tags: ['todo'],
@@ -134,7 +134,7 @@ export default asRoute(async function todoRoute(app) {
       },
     },
 
-    '/todo/{id}': {
+    '/todos/{id}': {
       get: {
         description: todoGetSchema.description,
         tags: ['todo'],
@@ -157,7 +157,7 @@ export default asRoute(async function todoRoute(app) {
       },
     },
 
-    '/todo/update': {
+    '/todos/update': {
       patch: {
         description: todoUpdateSchema.description,
         tags: ['todo'],
@@ -182,7 +182,7 @@ export default asRoute(async function todoRoute(app) {
       },
     },
 
-    '/todo/delete/{id}': {
+    '/todos/delete/{id}': {
       delete: {
         description: todoDeleteSchema.description,
         tags: ['todo'],
