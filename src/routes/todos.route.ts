@@ -20,12 +20,12 @@ import TodoService from '../services/TodoService';
 
 export const prefix = '/todos';
 
-export default asRoute(async function todoRoute(app) {
+export default asRoute(async function todoRoute(router) {
   const cache = await caching(memoryStore({ ttl: 0 }));
   const cacheService = new CacheService(cache);
   const todoService = new TodoService(cacheService);
 
-  app
+  router
 
     .post(
       '/create',
