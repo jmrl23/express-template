@@ -1,8 +1,8 @@
 # Express Application Template
 
-Simple starter template for express application.
+template for building express application
 
-[![Express](https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png)](https://expressjs.com/)
+[![Express](https://i.cloudup.com/zfY6lL7eFa-3000x3000.png)](http://expressjs.com/)
 
 ## Installation
 
