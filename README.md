@@ -6,7 +6,7 @@ template for building express application
 
 ## Installation
 
-```bash
+```sh
 yarn # or npm install
 ```
 
