@@ -1,7 +1,7 @@
 import { caching, memoryStore } from 'cache-manager';
+import { asRoute } from '../lib/common';
 import { registerPaths } from '../lib/swagger';
-import { validate, wrapper } from '../lib/util/express';
-import { asRoute } from '../lib/util/typings';
+import { validate, wrapper } from '../lib/common';
 import {
   responseTodoOKSchema,
   responseTodosOKSchema,

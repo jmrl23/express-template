@@ -3,8 +3,8 @@ import * as c from 'colorette';
 import detectPort from 'detect-port';
 import app from './app';
 import bootstrap from './bootstrap';
+import { logger } from './lib/common';
 import { PORT, SERVER_HOST } from './lib/constant/env';
-import logger from './lib/util/logger';
 
 async function main() {
   const host = SERVER_HOST;

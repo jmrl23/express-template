@@ -1,8 +1,8 @@
-import { glob } from 'glob';
-import { asPlugin } from '../lib/util/typings';
 import { Router } from 'express';
-import util from 'node:util';
+import { glob } from 'glob';
 import path from 'node:path';
+import util from 'node:util';
+import { asPlugin } from '../lib/common';
 
 /**
  * route file rules:

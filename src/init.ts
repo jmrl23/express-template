@@ -2,7 +2,7 @@ import * as c from 'colorette';
 import dotenv from 'dotenv';
 import { globSync } from 'glob';
 import path from 'node:path';
-import logger from './lib/util/logger';
+import { logger } from './lib/common';
 
 console.clear();
 

@@ -2,8 +2,7 @@ import * as c from 'colorette';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
-import logger from '../lib/util/logger';
-import { asPlugin } from '../lib/util/typings';
+import { asPlugin, logger } from '../lib/common';
 
 export default asPlugin(async function middleware(app) {
   app.use(

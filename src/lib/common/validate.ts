@@ -4,7 +4,7 @@ import ajvFormats from 'ajv-formats';
 import betterAjvErrors from 'better-ajv-errors';
 import { BadRequest } from 'http-errors';
 import type { RequestHandler } from 'express';
-import type { Schema } from '../typings';
+import type { Schema } from './typings';
 
 export default function validate(
   prop: 'params' | 'body' | 'query',

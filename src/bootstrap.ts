@@ -7,9 +7,8 @@ import createHttpError, {
   NotFound,
 } from 'http-errors';
 import path from 'node:path';
-import wrapper from './lib/util/express/wrapper';
-import logger from './lib/util/logger';
-import { asPlugin } from './lib/util/typings';
+import { asPlugin, logger, wrapper } from './lib/common';
+
 import middleware from './plugins/middleware';
 import routes from './plugins/routes';
 import swagger from './plugins/swagger';

@@ -1,7 +1,7 @@
 import { OpenAPIV3_1 } from 'openapi-types';
 import swaggerUiExpress from 'swagger-ui-express';
+import { asPlugin } from '../lib/common';
 import { paths } from '../lib/swagger';
-import { asPlugin } from '../lib/util/typings';
 
 export default asPlugin(async function swagger(app, options: Options) {
   const { routePrefix } = options;
