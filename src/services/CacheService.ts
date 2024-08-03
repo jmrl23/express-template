@@ -1,4 +1,4 @@
-import { type Cache } from 'cache-manager';
+import { Cache } from 'cache-manager';
 
 export default class CacheService {
   constructor(public readonly cache: Cache) {}

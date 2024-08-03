@@ -1,4 +1,4 @@
-import type { FromSchema } from 'json-schema-to-ts';
+import { FromSchema } from 'json-schema-to-ts';
 import { asJsonSchema } from '../lib/common';
 
 export const todoSchema = asJsonSchema({

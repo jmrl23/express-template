@@ -1,8 +1,6 @@
-import type { OpenAPIV3_1 } from 'openapi-types';
+import { OpenAPIV3_1 } from 'openapi-types';
 
-/**
- * Swagger spec paths, do not remove
- */
+// swagger spec paths reference
 export const paths: OpenAPIV3_1.PathsObject = {};
 
 export function registerPaths(pathsObject: OpenAPIV3_1.PathsObject): void {

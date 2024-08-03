@@ -1,6 +1,6 @@
 import { NotFound } from 'http-errors';
 import crypto from 'node:crypto';
-import type { Todo } from '../schemas/todo';
+import { Todo } from '../schemas/todos';
 import CacheService from './CacheService';
 
 export default class TodoService {

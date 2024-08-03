@@ -1,5 +1,5 @@
 import * as c from 'colorette';
-import type { Application, ErrorRequestHandler } from 'express';
+import { Application, ErrorRequestHandler } from 'express';
 import express from 'express';
 import createHttpError, {
   HttpError,

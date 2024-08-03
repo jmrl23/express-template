@@ -14,7 +14,7 @@ import {
   todoGetSchema,
   TodoUpdate,
   todoUpdateSchema,
-} from '../schemas/todo';
+} from '../schemas/todos';
 import CacheService from '../services/CacheService';
 import TodoService from '../services/TodoService';
 
