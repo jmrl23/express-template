@@ -1,10 +1,10 @@
 import Ajv, { type Options } from 'ajv';
-import wrapper from './wrapper';
 import ajvFormats from 'ajv-formats';
 import betterAjvErrors from 'better-ajv-errors';
+import { RequestHandler } from 'express';
 import { BadRequest } from 'http-errors';
-import type { RequestHandler } from 'express';
-import type { Schema } from './typings';
+import { Schema } from './typings';
+import wrapper from './wrapper';
 
 export default function validate(
   prop: 'params' | 'body' | 'query',

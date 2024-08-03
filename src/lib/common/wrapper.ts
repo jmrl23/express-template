@@ -1,4 +1,4 @@
-import type {
+import {
   Locals,
   RequestHandler as ExpressRequestHandler,
   Query,
