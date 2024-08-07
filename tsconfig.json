@@ -14,6 +14,13 @@
     "strictPropertyInitialization": false
   },
   "include": ["./src/**/*.ts", "./src/**/*.js", "./src/**/*.json"],
+  "exclude": [
+    "./src/test.ts",
+    "./src/**/*.spec.js",
+    "./src/**/*.spec.ts",
+    "./src/**/*.test.js",
+    "./src/**/*.test.ts"
+  ],
   "ts-node": {
     "swc": true
   }
