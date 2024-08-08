@@ -4,10 +4,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "tsc --build",
+    "test": "ts-node ./src/test.ts",
     "start": "node .",
     "start:dev": "nodemon -q",
     "start:prod": "dotenv -v NODE_ENV=production -- node .",
-    "test": "ts-node ./src/test.ts",
     "format": "prettier --write \"src/**/*.{ts,js}\""
   },
   "dependencies": {
