@@ -1,9 +1,9 @@
-import { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
+import fs from 'node:fs';
+import path from 'node:path';
+import { OpenAPIV3_1 } from 'openapi-types';
 import swaggerUiExpress from 'swagger-ui-express';
 import { asPlugin } from '../lib/common';
 import { paths } from '../lib/swagger';
-import fs from 'node:fs';
-import path from 'node:path';
 
 interface Options {
   routePrefix: string;
