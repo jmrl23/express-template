@@ -4,10 +4,10 @@ import detectPort from 'detect-port';
 import app from './app';
 import bootstrap from './bootstrap';
 import { logger } from './lib/common';
-import { PORT, SERVER_HOST } from './lib/constant/env';
+import { PORT } from './lib/constant/env';
 
 async function main() {
-  const host = SERVER_HOST;
+  const host = '0.0.0.0';
   const port = await detectPort(PORT);
 
   await bootstrap(app);
