@@ -46,7 +46,12 @@ export default asPlugin(async function routes(app, options: Options) {
     const prefix: string =
       route.prefix ??
       (_path.substring(0, _path.length - fileName.length - 1) || '/');
-    const router = route.router ?? Router();
+    const router =
+      route.router ??
+      Router({
+        caseSensitive: true,
+        strict: true,
+      });
 
     route.default(router, app);
     app.use(prefix, router);
