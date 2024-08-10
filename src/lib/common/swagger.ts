@@ -22,6 +22,12 @@ export function describeParameters(
   });
 }
 
+export function describeSchema<S extends Schema>(
+  schema: S,
+): Record<string, unknown> {
+  return schema;
+}
+
 export function describePaths(pathsObject: OpenAPIV3_1.PathsObject): void {
   Object.assign(paths, pathsObject);
 }

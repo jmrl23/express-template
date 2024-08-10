@@ -5,6 +5,7 @@ import {
   asRoute,
   describeParameters,
   describePaths,
+  describeSchema,
   validate,
   wrapper,
 } from '../lib/common';
@@ -114,7 +115,7 @@ export default asRoute(async function todoRoute(router) {
           required: true,
           content: {
             'application/json': {
-              schema: Object.assign(todoCreateSchema),
+              schema: describeSchema(todoCreateSchema),
               example: {
                 content: todoCreateSchema.properties.content.examples[0],
               },
@@ -126,7 +127,7 @@ export default asRoute(async function todoRoute(router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(
+                schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
                     required: ['todo'],
@@ -152,7 +153,7 @@ export default asRoute(async function todoRoute(router) {
             description: 'todos',
             content: {
               'application/json': {
-                schema: Object.assign(
+                schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
                     required: ['todos'],
@@ -181,7 +182,7 @@ export default asRoute(async function todoRoute(router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(
+                schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
                     required: ['todo'],
@@ -205,7 +206,7 @@ export default asRoute(async function todoRoute(router) {
           required: true,
           content: {
             'application/json': {
-              schema: Object.assign(todoUpdateSchema),
+              schema: describeSchema(todoUpdateSchema),
             },
           },
         },
@@ -214,7 +215,7 @@ export default asRoute(async function todoRoute(router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(
+                schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
                     required: ['todo'],
@@ -240,7 +241,7 @@ export default asRoute(async function todoRoute(router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(
+                schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
                     required: ['todo'],
