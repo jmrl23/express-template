@@ -1,17 +1,13 @@
 import { caching, memoryStore } from 'cache-manager';
-import { asRoute, validate, wrapper } from '../lib/common';
+import { FromSchema } from 'json-schema-to-ts';
+import { asJsonSchema, asRoute, validate, wrapper } from '../lib/common';
 import { registerPaths } from '../lib/swagger';
 import {
-  responseTodoOKSchema,
-  responseTodosOKSchema,
-  TodoCreate,
   todoCreateSchema,
-  TodoDelete,
   todoDeleteSchema,
-  TodoGet,
-  todoGetAllSchema,
   todoGetSchema,
-  TodoUpdate,
+  todoSchema,
+  todosGetSchema,
   todoUpdateSchema,
 } from '../schemas/todos';
 import CacheService from '../services/CacheService';
@@ -20,7 +16,11 @@ import TodoService from '../services/TodoService';
 export const prefix = '/todos';
 
 export default asRoute(async function todoRoute(router) {
-  const cache = await caching(memoryStore({ ttl: 0 }));
+  const cache = await caching(
+    // check compatible stores at https://www.npmjs.com/package/cache-manager#store-engines
+    // or implement your own
+    memoryStore({ ttl: 0 }),
+  );
   const cacheService = new CacheService(cache);
   const todoService = new TodoService(cacheService);
 
@@ -29,59 +29,71 @@ export default asRoute(async function todoRoute(router) {
     .post(
       '/create',
       validate('body', todoCreateSchema),
-      wrapper<{ RequestBody: TodoCreate }>(async function (request) {
-        const { content } = request.body;
-        const todo = await todoService.createTodo(content);
-        return {
-          todo,
-        };
-      }),
+      wrapper<{ RequestBody: FromSchema<typeof todoCreateSchema> }>(
+        async function (request) {
+          const { content } = request.body;
+          const todo = await todoService.createTodo(content);
+          return {
+            todo,
+          };
+        },
+      ),
     )
 
     .get(
-      '',
-      wrapper(async function () {
-        const todos = await todoService.getTodos();
-        return {
-          todos,
-        };
-      }),
+      '/',
+      validate('query', todosGetSchema),
+      wrapper<{ RequestQuery: FromSchema<typeof todosGetSchema> }>(
+        async function (request) {
+          const query = request.query;
+          const todos = await todoService.getTodos(query);
+          return {
+            todos,
+          };
+        },
+      ),
     )
 
     .get(
       '/:id',
       validate('params', todoGetSchema),
-      wrapper<{ RequestParams: TodoGet }>(async function (request) {
-        const { id } = request.params;
-        const todo = await todoService.getTodo(id);
-        return {
-          todo,
-        };
-      }),
+      wrapper<{ RequestParams: FromSchema<typeof todoGetSchema> }>(
+        async function (request) {
+          const { id } = request.params;
+          const todo = await todoService.getTodo(id);
+          return {
+            todo,
+          };
+        },
+      ),
     )
 
     .patch(
       '/update',
       validate('body', todoUpdateSchema),
-      wrapper<{ RequestBody: TodoUpdate }>(async function (request) {
-        const { id, content, done } = request.body;
-        const todo = await todoService.updateTodo(id, content, done);
-        return {
-          todo,
-        };
-      }),
+      wrapper<{ RequestBody: FromSchema<typeof todoUpdateSchema> }>(
+        async function (request) {
+          const { id, content, done } = request.body;
+          const todo = await todoService.updateTodo(id, content, done);
+          return {
+            todo,
+          };
+        },
+      ),
     )
 
     .delete(
       '/delete/:id',
       validate('params', todoDeleteSchema),
-      wrapper<{ RequestParams: TodoDelete }>(async function (request) {
-        const { id } = request.params;
-        const todo = await todoService.deleteTodo(id);
-        return {
-          todo,
-        };
-      }),
+      wrapper<{ RequestParams: FromSchema<typeof todoDeleteSchema> }>(
+        async function (request) {
+          const { id } = request.params;
+          const todo = await todoService.deleteTodo(id);
+          return {
+            todo,
+          };
+        },
+      ),
     );
 
   /**
@@ -90,7 +102,7 @@ export default asRoute(async function todoRoute(router) {
   registerPaths({
     '/todos/create': {
       post: {
-        description: todoCreateSchema.description,
+        description: 'create a todo',
         tags: ['todo'],
         requestBody: {
           required: true,
@@ -105,10 +117,18 @@ export default asRoute(async function todoRoute(router) {
         },
         responses: {
           '200': {
-            description: responseTodoOKSchema.description,
+            description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(responseTodoOKSchema),
+                schema: Object.assign(
+                  asJsonSchema({
+                    type: 'object',
+                    required: ['todo'],
+                    properties: {
+                      todo: todoSchema,
+                    },
+                  }),
+                ),
               },
             },
           },
@@ -118,14 +138,30 @@ export default asRoute(async function todoRoute(router) {
 
     '/todos': {
       get: {
-        description: todoGetAllSchema.description,
+        description: 'get todos by query',
         tags: ['todo'],
+        parameters: Object.keys(todosGetSchema.properties).map((key) => ({
+          in: 'query',
+          name: key,
+          schema: Object.assign(todosGetSchema.properties)[key],
+        })),
         responses: {
           '200': {
-            description: responseTodosOKSchema.description,
+            description: 'todos',
             content: {
               'application/json': {
-                schema: Object.assign(responseTodosOKSchema),
+                schema: Object.assign(
+                  asJsonSchema({
+                    type: 'object',
+                    required: ['todos'],
+                    properties: {
+                      todos: {
+                        type: 'array',
+                        items: todoSchema,
+                      },
+                    },
+                  }),
+                ),
               },
             },
           },
@@ -135,20 +171,28 @@ export default asRoute(async function todoRoute(router) {
 
     '/todos/{id}': {
       get: {
-        description: todoGetSchema.description,
+        description: 'get a todo',
         tags: ['todo'],
         parameters: Object.keys(todoGetSchema.properties).map((key) => ({
           in: 'path',
           name: key,
           required: Object.assign(todoGetSchema).required.includes(key),
-          schema: todoGetSchema.properties,
+          schema: Object.assign(todoGetSchema.properties)[key],
         })),
         responses: {
           '200': {
-            description: responseTodoOKSchema.description,
+            description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(responseTodoOKSchema),
+                schema: Object.assign(
+                  asJsonSchema({
+                    type: 'object',
+                    required: ['todo'],
+                    properties: {
+                      todo: todoSchema,
+                    },
+                  }),
+                ),
               },
             },
           },
@@ -158,7 +202,7 @@ export default asRoute(async function todoRoute(router) {
 
     '/todos/update': {
       patch: {
-        description: todoUpdateSchema.description,
+        description: 'update a todo',
         tags: ['todo'],
         requestBody: {
           required: true,
@@ -170,10 +214,18 @@ export default asRoute(async function todoRoute(router) {
         },
         responses: {
           '200': {
-            description: responseTodoOKSchema.description,
+            description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(responseTodoOKSchema),
+                schema: Object.assign(
+                  asJsonSchema({
+                    type: 'object',
+                    required: ['todo'],
+                    properties: {
+                      todo: todoSchema,
+                    },
+                  }),
+                ),
               },
             },
           },
@@ -183,7 +235,7 @@ export default asRoute(async function todoRoute(router) {
 
     '/todos/delete/{id}': {
       delete: {
-        description: todoDeleteSchema.description,
+        description: 'delete a todo',
         tags: ['todo'],
         parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
           in: 'path',
@@ -193,10 +245,18 @@ export default asRoute(async function todoRoute(router) {
         })),
         responses: {
           '200': {
-            description: responseTodoOKSchema.description,
+            description: 'todo',
             content: {
               'application/json': {
-                schema: Object.assign(responseTodoOKSchema),
+                schema: Object.assign(
+                  asJsonSchema({
+                    type: 'object',
+                    required: ['todo'],
+                    properties: {
+                      todo: todoSchema,
+                    },
+                  }),
+                ),
               },
             },
           },

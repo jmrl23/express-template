@@ -1,9 +1,7 @@
-import { FromSchema } from 'json-schema-to-ts';
 import { asJsonSchema } from '../lib/common';
 
 export const todoSchema = asJsonSchema({
   type: 'object',
-  description: 'Todo item',
   additionalProperties: false,
   required: ['id', 'createdAt', 'updatedAt', 'content', 'done'],
   properties: {
@@ -29,11 +27,9 @@ export const todoSchema = asJsonSchema({
     },
   },
 });
-export type Todo = FromSchema<typeof todoSchema>;
 
 export const todoCreateSchema = asJsonSchema({
   type: 'object',
-  description: 'Create new todo item',
   additionalProperties: false,
   required: ['content'],
   properties: {
@@ -44,18 +40,34 @@ export const todoCreateSchema = asJsonSchema({
     },
   },
 });
-export type TodoCreate = FromSchema<typeof todoCreateSchema>;
 
-export const todoGetAllSchema = asJsonSchema({
+export const todosGetSchema = asJsonSchema({
   type: 'object',
-  description: 'Get todo items',
   additionalProperties: false,
+  properties: {
+    revalidate: {
+      type: 'boolean',
+    },
+    content: {
+      type: 'string',
+      minLength: 1,
+    },
+    done: {
+      type: 'boolean',
+    },
+    skip: {
+      type: 'number',
+      minimum: 0,
+    },
+    take: {
+      type: 'number',
+      minimum: 0,
+    },
+  },
 });
-export type TodoGetAll = FromSchema<typeof todoGetAllSchema>;
 
 export const todoGetSchema = asJsonSchema({
   type: 'object',
-  description: 'Get todo item',
   additionalProperties: false,
   required: ['id'],
   properties: {
@@ -65,11 +77,9 @@ export const todoGetSchema = asJsonSchema({
     },
   },
 });
-export type TodoGet = FromSchema<typeof todoGetSchema>;
 
 export const todoUpdateSchema = asJsonSchema({
   type: 'object',
-  description: 'Update todo item',
   additionalProperties: false,
   required: ['id'],
   properties: {
@@ -88,11 +98,9 @@ export const todoUpdateSchema = asJsonSchema({
     },
   },
 });
-export type TodoUpdate = FromSchema<typeof todoUpdateSchema>;
 
 export const todoDeleteSchema = asJsonSchema({
   type: 'object',
-  description: 'Delete todo item',
   additionalProperties: false,
   required: ['id'],
   properties: {
@@ -102,29 +110,3 @@ export const todoDeleteSchema = asJsonSchema({
     },
   },
 });
-export type TodoDelete = FromSchema<typeof todoDeleteSchema>;
-
-export const responseTodoOKSchema = asJsonSchema({
-  type: 'object',
-  description: 'Response todo item',
-  additionalProperties: false,
-  required: ['todo'],
-  properties: {
-    todo: { ...todoSchema, nullable: true },
-  },
-});
-export type ResponseTodoOK = FromSchema<typeof responseTodoOKSchema>;
-
-export const responseTodosOKSchema = asJsonSchema({
-  type: 'object',
-  description: 'Response todo items',
-  additionalProperties: false,
-  required: ['todos'],
-  properties: {
-    todos: {
-      type: 'array',
-      items: { ...todoSchema, nullable: true },
-    },
-  },
-});
-export type ResponseTodosOK = FromSchema<typeof responseTodosOKSchema>;

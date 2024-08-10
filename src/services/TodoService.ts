@@ -1,7 +1,10 @@
 import { NotFound } from 'http-errors';
+import { FromSchema } from 'json-schema-to-ts';
 import crypto from 'node:crypto';
-import { Todo } from '../schemas/todos';
+import { todoSchema, todosGetSchema } from '../schemas/todos';
 import CacheService from './CacheService';
+
+export interface Todo extends FromSchema<typeof todoSchema> {}
 
 export default class TodoService {
   constructor(private readonly cacheService: CacheService) {}
@@ -20,14 +23,40 @@ export default class TodoService {
     return todo;
   }
 
-  public async getTodos(): Promise<Todo[]> {
+  public async getTodos(
+    query: FromSchema<typeof todosGetSchema> = {},
+  ): Promise<Todo[]> {
+    const cacheKey = `todos:[${JSON.stringify([query.content, query.done])}]`;
+
+    if (query.revalidate === true) {
+      await this.cacheService.del(cacheKey);
+    }
+
+    const cachedtodos = await this.cacheService.get<Todo[]>(cacheKey);
+    if (cachedtodos) {
+      return cachedtodos.slice(query.skip, query.take);
+    }
+
     const store = this.cacheService.cache.store;
     const keys = await store.keys();
     const todoKeys = keys.filter((key) => key.startsWith('todo:'));
     const todos = await Promise.all(
       todoKeys.map((key) => this.cacheService.get<Todo>(key) as Promise<Todo>),
     );
-    return todos;
+    const filteredTodos = todos.filter((todo) => {
+      return (
+        (query.content === undefined
+          ? true
+          : todo.content.startsWith(query.content)) &&
+        (query.done === undefined ? true : todo.done === query.done)
+      );
+    });
+    await this.cacheService.set(
+      cacheKey,
+      structuredClone(filteredTodos),
+      300 * 1000, // 5 mins.
+    );
+    return filteredTodos.slice(query.skip, query.take);
   }
 
   public async getTodo(id: string): Promise<Todo> {

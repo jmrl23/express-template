@@ -1,9 +1,8 @@
 import { caching } from 'cache-manager';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { Todo } from '../schemas/todos';
 import CacheService from './CacheService';
-import TodoService from './TodoService';
+import TodoService, { Todo } from './TodoService';
 
 describe('test todo service', async function testTodoService() {
   const cache = await caching('memory');
