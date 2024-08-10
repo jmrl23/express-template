@@ -1,7 +1,13 @@
 import { caching, memoryStore } from 'cache-manager';
 import { FromSchema } from 'json-schema-to-ts';
-import { asJsonSchema, asRoute, validate, wrapper } from '../lib/common';
-import { registerPaths } from '../lib/swagger';
+import {
+  asJsonSchema,
+  asRoute,
+  describeParameters,
+  describePaths,
+  validate,
+  wrapper,
+} from '../lib/common';
 import {
   todoCreateSchema,
   todoDeleteSchema,
@@ -99,7 +105,7 @@ export default asRoute(async function todoRoute(router) {
   /**
    * Paths
    */
-  registerPaths({
+  describePaths({
     '/todos/create': {
       post: {
         description: 'create a todo',
@@ -140,11 +146,7 @@ export default asRoute(async function todoRoute(router) {
       get: {
         description: 'get todos by query',
         tags: ['todo'],
-        parameters: Object.keys(todosGetSchema.properties).map((key) => ({
-          in: 'query',
-          name: key,
-          schema: Object.assign(todosGetSchema.properties)[key],
-        })),
+        parameters: describeParameters('query', todosGetSchema),
         responses: {
           '200': {
             description: 'todos',
@@ -173,12 +175,7 @@ export default asRoute(async function todoRoute(router) {
       get: {
         description: 'get a todo',
         tags: ['todo'],
-        parameters: Object.keys(todoGetSchema.properties).map((key) => ({
-          in: 'path',
-          name: key,
-          required: Object.assign(todoGetSchema).required.includes(key),
-          schema: Object.assign(todoGetSchema.properties)[key],
-        })),
+        parameters: describeParameters('path', todoGetSchema),
         responses: {
           '200': {
             description: 'todo',
@@ -237,12 +234,7 @@ export default asRoute(async function todoRoute(router) {
       delete: {
         description: 'delete a todo',
         tags: ['todo'],
-        parameters: Object.keys(todoDeleteSchema.properties).map((key) => ({
-          in: 'path',
-          name: key,
-          required: Object.assign(todoDeleteSchema).required.includes(key),
-          schema: Object.assign(todoDeleteSchema.properties)[key],
-        })),
+        parameters: describeParameters('path', todoDeleteSchema),
         responses: {
           '200': {
             description: 'todo',

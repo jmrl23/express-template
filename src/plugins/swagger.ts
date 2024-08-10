@@ -2,8 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { OpenAPIV3_1 } from 'openapi-types';
 import swaggerUiExpress from 'swagger-ui-express';
-import { asPlugin } from '../lib/common';
-import { paths } from '../lib/swagger';
+import { asPlugin } from '../lib/common/typings';
 
 interface Options {
   routePrefix: string;
@@ -46,3 +45,6 @@ export default asPlugin(async function swagger(app, options: Options) {
     .use(routePrefix, swaggerUiExpress.serve)
     .get(routePrefix, swaggerUiExpress.setup(spec));
 });
+
+// swagger spec paths reference
+export const paths: OpenAPIV3_1.PathsObject = {};
