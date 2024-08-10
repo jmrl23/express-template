@@ -241,7 +241,7 @@ export default asRoute(async function todoRoute(router) {
           in: 'path',
           name: key,
           required: Object.assign(todoDeleteSchema).required.includes(key),
-          schema: todoDeleteSchema.properties,
+          schema: Object.assign(todoDeleteSchema.properties)[key],
         })),
         responses: {
           '200': {
