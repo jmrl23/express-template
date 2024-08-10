@@ -4,6 +4,11 @@ import { OpenAPIV3_1 } from 'openapi-types';
 import swaggerUiExpress from 'swagger-ui-express';
 import { asPlugin } from '../lib/common/typings';
 
+/**
+ * Note: if you wish to remove this file, you must as well remove the file at
+ * `src/lib/common/swagger.ts` and update `src/lib/common/index.ts`
+ */
+
 interface Options {
   routePrefix: string;
 }
