@@ -1,6 +1,5 @@
 import * as c from 'colorette';
-import { Application, ErrorRequestHandler } from 'express';
-import express from 'express';
+import express, { Application, ErrorRequestHandler } from 'express';
 import createHttpError, {
   HttpError,
   InternalServerError,
@@ -9,14 +8,14 @@ import createHttpError, {
 import path from 'node:path';
 import { asPlugin, logger, wrapper } from './lib/common';
 
-import middleware from './plugins/middleware';
+import middlewares from './plugins/middlewares';
 import routes from './plugins/routes';
 import swagger from './plugins/swagger';
 
 export default asPlugin(async function bootstrap(app) {
   app.disable('x-powered-by');
 
-  await middleware(app);
+  await middlewares(app);
 
   await routes(app, {
     dirPath: path.resolve(__dirname, './routes'),
