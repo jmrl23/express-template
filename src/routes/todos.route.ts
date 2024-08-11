@@ -115,7 +115,8 @@ export default asRoute(async function (router) {
     );
 
   /**
-   * Paths
+   * Documents API endpoints using Swagger/OpenAPI.
+   * It defines routes, request details, and responses, helping to generate clear and useful API documentation.
    */
   describePaths({
     '/todos/create': {
