@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { glob } from 'glob';
 import path from 'node:path';
-import util from 'node:util';
 import { asPlugin } from '../lib/common';
 
 interface Options {
@@ -32,7 +31,8 @@ export default asPlugin(async function (app, options: Options) {
 
   for (const routeFile of files) {
     const route = await import(routeFile);
-    if (!util.types.isAsyncFunction(route.default)) continue;
+
+    if (typeof route.default !== 'function') continue;
 
     const _path = routeFile.replace(/[\\/]/g, '/').substring(dirPath.length);
     const fileName = path.basename(routeFile);
