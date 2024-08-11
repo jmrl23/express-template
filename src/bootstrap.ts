@@ -13,6 +13,7 @@ import swagger from './plugins/swagger';
 
 export default asPlugin(async function (app) {
   app.disable('x-powered-by');
+  app.set('case sensitive routing', true);
 
   await middlewares(app);
 
