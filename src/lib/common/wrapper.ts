@@ -5,9 +5,13 @@ import {
   ParamsDictionary,
 } from 'express-serve-static-core';
 
-export default function wrapper<P extends Payload>(
-  requestHandler: RequestHandler<P>,
-): RequestHandler<P> {
+export interface WPayload<P extends Payload = Payload> {
+  Payload: P;
+}
+
+export default function wrapper<WP extends WPayload>(
+  requestHandler: RequestHandler<WP>,
+): RequestHandler<WP> {
   return async function (request, response, next) {
     try {
       const data = await Promise.resolve(
@@ -22,17 +26,18 @@ export default function wrapper<P extends Payload>(
   };
 }
 
-type Payload = {
+interface Payload {
   RequestBody?: unknown;
   RequestParams?: unknown;
   RequestQuery?: unknown;
   ResponseBody?: unknown;
-};
+}
 type TypeWithFallback<T, F> = unknown extends T ? F : T;
-type RequestHandler<P extends Payload> = ExpressRequestHandler<
-  TypeWithFallback<P['RequestParams'], ParamsDictionary>,
-  TypeWithFallback<P['ResponseBody'], any>,
-  TypeWithFallback<P['RequestBody'], any>,
-  TypeWithFallback<P['RequestQuery'], Query>,
-  Locals
->;
+interface RequestHandler<WP extends WPayload<Payload>>
+  extends ExpressRequestHandler<
+    TypeWithFallback<WP['Payload']['RequestParams'], ParamsDictionary>,
+    TypeWithFallback<WP['Payload']['ResponseBody'], any>,
+    TypeWithFallback<WP['Payload']['RequestBody'], any>,
+    TypeWithFallback<WP['Payload']['RequestQuery'], Query>,
+    Locals
+  > {}

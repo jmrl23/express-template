@@ -7,6 +7,7 @@ import {
   describePaths,
   describeSchema,
   validate,
+  WPayload,
   wrapper,
 } from '../lib/common';
 import {
@@ -36,71 +37,81 @@ export default asRoute(async function (router) {
     .post(
       '/create',
       validate('body', todoCreateSchema),
-      wrapper<{ RequestBody: FromSchema<typeof todoCreateSchema> }>(
-        async function (request) {
-          const { content } = request.body;
-          const todo = await todoService.createTodo(content);
-          return {
-            todo,
-          };
-        },
-      ),
+      wrapper<
+        WPayload<{
+          RequestBody: FromSchema<typeof todoCreateSchema>;
+        }>
+      >(async function (request) {
+        const { content } = request.body;
+        const todo = await todoService.createTodo(content);
+        return {
+          todo,
+        };
+      }),
     )
 
     .get(
       '/',
       validate('query', todosGetSchema),
-      wrapper<{ RequestQuery: FromSchema<typeof todosGetSchema> }>(
-        async function (request) {
-          const query = request.query;
-          const todos = await todoService.getTodos(query);
-          return {
-            todos,
-          };
-        },
-      ),
+      wrapper<
+        WPayload<{
+          RequestQuery: FromSchema<typeof todosGetSchema>;
+        }>
+      >(async function (request) {
+        const query = request.query;
+        const todos = await todoService.getTodos(query);
+        return {
+          todos,
+        };
+      }),
     )
 
     .get(
       '/:id',
       validate('params', todoGetSchema),
-      wrapper<{ RequestParams: FromSchema<typeof todoGetSchema> }>(
-        async function (request) {
-          const { id } = request.params;
-          const todo = await todoService.getTodo(id);
-          return {
-            todo,
-          };
-        },
-      ),
+      wrapper<
+        WPayload<{
+          RequestParams: FromSchema<typeof todoGetSchema>;
+        }>
+      >(async function (request) {
+        const { id } = request.params;
+        const todo = await todoService.getTodo(id);
+        return {
+          todo,
+        };
+      }),
     )
 
     .patch(
       '/update',
       validate('body', todoUpdateSchema),
-      wrapper<{ RequestBody: FromSchema<typeof todoUpdateSchema> }>(
-        async function (request) {
-          const { id, content, done } = request.body;
-          const todo = await todoService.updateTodo(id, content, done);
-          return {
-            todo,
-          };
-        },
-      ),
+      wrapper<
+        WPayload<{
+          RequestBody: FromSchema<typeof todoUpdateSchema>;
+        }>
+      >(async function (request) {
+        const { id, content, done } = request.body;
+        const todo = await todoService.updateTodo(id, content, done);
+        return {
+          todo,
+        };
+      }),
     )
 
     .delete(
       '/delete/:id',
       validate('params', todoDeleteSchema),
-      wrapper<{ RequestParams: FromSchema<typeof todoDeleteSchema> }>(
-        async function (request) {
-          const { id } = request.params;
-          const todo = await todoService.deleteTodo(id);
-          return {
-            todo,
-          };
-        },
-      ),
+      wrapper<
+        WPayload<{
+          RequestParams: FromSchema<typeof todoDeleteSchema>;
+        }>
+      >(async function (request) {
+        const { id } = request.params;
+        const todo = await todoService.deleteTodo(id);
+        return {
+          todo,
+        };
+      }),
     );
 
   /**
