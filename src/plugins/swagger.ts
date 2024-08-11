@@ -13,7 +13,7 @@ interface Options {
   routePrefix: string;
 }
 
-export default asPlugin(async function swagger(app, options: Options) {
+export default asPlugin(async function (app, options: Options) {
   const { routePrefix } = options;
   const packageJson: Record<string, unknown> = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '../../package.json')).toString(),

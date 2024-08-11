@@ -4,7 +4,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { asPlugin, logger } from '../lib/common';
 
-export default asPlugin(async function middleware(app) {
+export default asPlugin(async function (app) {
   app.use(
     morgan(
       ':remote-addr :method :url :status :res[content-length] - :response-time ms',

@@ -22,7 +22,7 @@ import TodoService from '../services/TodoService';
 
 export const prefix = '/todos';
 
-export default asRoute(async function todoRoute(router) {
+export default asRoute(async function (router) {
   const cache = await caching(
     // check compatible stores at https://www.npmjs.com/package/cache-manager#store-engines
     // or implement your own

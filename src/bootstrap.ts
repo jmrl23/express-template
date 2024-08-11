@@ -7,12 +7,11 @@ import createHttpError, {
 } from 'http-errors';
 import path from 'node:path';
 import { asPlugin, logger, wrapper } from './lib/common';
-
 import middlewares from './plugins/middlewares';
 import routes from './plugins/routes';
 import swagger from './plugins/swagger';
 
-export default asPlugin(async function bootstrap(app) {
+export default asPlugin(async function (app) {
   app.disable('x-powered-by');
 
   await middlewares(app);

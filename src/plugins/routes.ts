@@ -22,7 +22,7 @@ interface Callback {
  *   example: `export const prefix = '/example'`
  */
 
-export default asPlugin(async function routes(app, options: Options) {
+export default asPlugin(async function (app, options: Options) {
   const { dirPath, callback } = options;
   const files = await glob([`${dirPath}/**/*.route.{ts,js}`], {
     absolute: true,
