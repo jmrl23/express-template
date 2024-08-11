@@ -26,9 +26,9 @@
     picocolors "^1.0.0"
 
 "@babel/runtime@^7.18.3":
-  version "7.24.6"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.6.tgz#5b76eb89ad45e2e4a0a8db54c456251469a3358e"
-  integrity sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==
+  version "7.25.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.0.tgz#3af9a91c1b739c569d5d80cc917280919c544ecb"
+  integrity sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==
   dependencies:
     regenerator-runtime "^0.14.0"
 
