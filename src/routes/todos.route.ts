@@ -83,14 +83,17 @@ export default asRoute(async function (router) {
     )
 
     .patch(
-      '/update',
-      validate('body', todoUpdateSchema),
+      '/update/:id',
+      validate('params', todoUpdateSchema.properties.params),
+      validate('body', todoUpdateSchema.properties.body),
       wrapper<
         WPayload<{
-          RequestBody: FromSchema<typeof todoUpdateSchema>;
+          RequestParams: FromSchema<typeof todoUpdateSchema.properties.params>;
+          RequestBody: FromSchema<typeof todoUpdateSchema.properties.body>;
         }>
       >(async function (request) {
-        const { id, content, done } = request.body;
+        const id = request.params.id;
+        const { content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
           todo,
@@ -210,15 +213,19 @@ export default asRoute(async function (router) {
       },
     },
 
-    '/todos/update': {
+    '/todos/update/{id}': {
       patch: {
         description: 'update a todo',
         tags: ['todo'],
+        parameters: describeParameters(
+          'path',
+          todoUpdateSchema.properties.params,
+        ),
         requestBody: {
           required: true,
           content: {
             'application/json': {
-              schema: describeSchema(todoUpdateSchema),
+              schema: describeSchema(todoUpdateSchema.properties.body),
             },
           },
         },

@@ -81,20 +81,33 @@ export const todoGetSchema = asJsonSchema({
 export const todoUpdateSchema = asJsonSchema({
   type: 'object',
   additionalProperties: false,
-  required: ['id'],
+  required: ['params', 'body'],
   properties: {
-    id: {
-      type: 'string',
-      format: 'uuid',
+    params: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id'],
+      properties: {
+        id: {
+          type: 'string',
+          format: 'uuid',
+        },
+      },
     },
-    content: {
-      type: 'string',
-      minLength: 1,
-      examples: ['Walk the dog'],
-    },
-    done: {
-      type: 'boolean',
-      examples: [true],
+    body: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        content: {
+          type: 'string',
+          minLength: 1,
+          examples: ['Walk the dog'],
+        },
+        done: {
+          type: 'boolean',
+          examples: [true],
+        },
+      },
     },
   },
 });
