@@ -17,21 +17,7 @@ export default asPlugin(async function (app) {
         }
         return 'info';
       },
-      serializers: {
-        req(request) {
-          return {
-            method: request.method,
-            url: request.url,
-            params: request.params,
-            query: request.query,
-          };
-        },
-        res(response) {
-          return {
-            statusCode: response.statusCode,
-          };
-        },
-      },
+      wrapSerializers: false,
     }),
     cors({ origin: '*' }),
     express.json({ strict: true }),

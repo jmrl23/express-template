@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import pino, { Logger } from 'pino';
 
 const loggers = new Map<NodeEnv, Logger>();
@@ -11,6 +12,22 @@ loggers.set(
         colorize: true,
         ignore: 'pid,hostname',
         translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
+      },
+    },
+    serializers: {
+      req(request: Request) {
+        return {
+          method: request.method,
+          url: request.url,
+          params: request.params,
+          query: request.query,
+        };
+      },
+      res(response: Response) {
+        return {
+          statusCode: response.statusCode,
+          headers: response.getHeaders(),
+        };
       },
     },
   }),
