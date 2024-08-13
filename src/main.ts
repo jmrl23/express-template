@@ -1,5 +1,4 @@
 import './init';
-import * as c from 'colorette';
 import detectPort from 'detect-port';
 import app from './app';
 import bootstrap from './bootstrap';
@@ -13,7 +12,7 @@ async function main() {
   await bootstrap(app);
 
   app.listen({ host, port }, function () {
-    logger.info(`${c.bold('server port')} ${port}`);
+    logger.info(`listening on port ${port}`);
   });
 }
 

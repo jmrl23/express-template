@@ -1,4 +1,3 @@
-import * as c from 'colorette';
 import express, { Application, ErrorRequestHandler } from 'express';
 import createHttpError, {
   HttpError,
@@ -21,7 +20,7 @@ export default asPlugin(async function (app) {
     dirPath: path.resolve(__dirname, './routes'),
     callback(routes) {
       for (const route of routes) {
-        logger.info(`${c.bold('registered route')} ${route}`);
+        logger.info(`registered route {${route}}`);
       }
     },
   });

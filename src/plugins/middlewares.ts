@@ -1,29 +1,30 @@
-import * as c from 'colorette';
 import cors from 'cors';
 import express from 'express';
-import morgan from 'morgan';
+import pinoHttp from 'pino-http';
 import { asPlugin, logger } from '../lib/common';
 
 export default asPlugin(async function (app) {
   app.use(
-    morgan(
-      ':remote-addr :method :url :status :res[content-length] - :response-time ms',
-      {
-        stream: {
-          write(message) {
-            logger.http(`${c.bold('morgan')} ${c.gray(message.trim())}`);
-          },
-        },
+    pinoHttp({
+      logger,
+      quietReqLogger: true,
+      quietResLogger: true,
+      customSuccessMessage(request, _, responseTime) {
+        return `request completed ${request.method} ${request.path} - ${responseTime}ms`;
       },
-    ),
-    cors({
-      origin: '*',
+      customLogLevel(_, response, error) {
+        if (response.statusCode >= 400 && response.statusCode < 500) {
+          return 'warn';
+        } else if (response.statusCode >= 500 || error) {
+          return 'error';
+        } else if (response.statusCode >= 300 && response.statusCode < 400) {
+          return 'silent';
+        }
+        return 'info';
+      },
     }),
-    express.json({
-      strict: true,
-    }),
-    express.urlencoded({
-      extended: true,
-    }),
+    cors({ origin: '*' }),
+    express.json({ strict: true }),
+    express.urlencoded({ extended: true }),
   );
 });
