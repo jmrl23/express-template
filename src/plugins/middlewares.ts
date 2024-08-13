@@ -7,11 +7,6 @@ export default asPlugin(async function (app) {
   app.use(
     pinoHttp({
       logger,
-      quietReqLogger: true,
-      quietResLogger: true,
-      customSuccessMessage(request, _, responseTime) {
-        return `request completed ${request.method} ${request.path} - ${responseTime}ms`;
-      },
       customLogLevel(_, response, error) {
         if (response.statusCode >= 400 && response.statusCode < 500) {
           return 'warn';
@@ -21,6 +16,21 @@ export default asPlugin(async function (app) {
           return 'silent';
         }
         return 'info';
+      },
+      serializers: {
+        req(request) {
+          return {
+            method: request.method,
+            url: request.url,
+            params: request.params,
+            query: request.query,
+          };
+        },
+        res(response) {
+          return {
+            statusCode: response.statusCode,
+          };
+        },
       },
     }),
     cors({ origin: '*' }),
