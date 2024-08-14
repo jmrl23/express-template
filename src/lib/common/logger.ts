@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pino, { Logger } from 'pino';
+import 'pino-pretty';
 
 const loggers = new Map<NodeEnv, Logger>();
 
