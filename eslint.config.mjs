@@ -2,7 +2,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default [
-  { files: ['**/*.{js,mjs,cjs,ts}'] },
+  { files: ['src/**/*.{js,ts}'] },
   {
     languageOptions: {
       globals: { ...globals.node },
