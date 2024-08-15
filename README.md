@@ -20,6 +20,7 @@ yarn # or npm install
 | start:dev  | start on development mode (nodemon + swc)   |
 | start:prod | start on production mode (must build first) |
 | format     | format codes (prettier)                     |
+| lint       | lint codes (eslint)                         |
 
 ## Structure
 
