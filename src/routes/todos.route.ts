@@ -45,7 +45,7 @@ export default asRoute(async function (router) {
         const { content } = request.body;
         const todo = await todoService.createTodo(content);
         return {
-          todo,
+          data: todo,
         };
       }),
     )
@@ -61,7 +61,7 @@ export default asRoute(async function (router) {
         const query = request.query;
         const todos = await todoService.getTodos(query);
         return {
-          todos,
+          data: todos,
         };
       }),
     )
@@ -77,7 +77,7 @@ export default asRoute(async function (router) {
         const { id } = request.params;
         const todo = await todoService.getTodo(id);
         return {
-          todo,
+          data: todo,
         };
       }),
     )
@@ -96,7 +96,7 @@ export default asRoute(async function (router) {
         const { content, done } = request.body;
         const todo = await todoService.updateTodo(id, content, done);
         return {
-          todo,
+          data: todo,
         };
       }),
     )
@@ -112,7 +112,7 @@ export default asRoute(async function (router) {
         const { id } = request.params;
         const todo = await todoService.deleteTodo(id);
         return {
-          todo,
+          data: todo,
         };
       }),
     );
@@ -145,9 +145,9 @@ export default asRoute(async function (router) {
                 schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
-                    required: ['todo'],
+                    required: ['data'],
                     properties: {
-                      todo: todoSchema,
+                      data: todoSchema,
                     },
                   }),
                 ),
@@ -171,9 +171,9 @@ export default asRoute(async function (router) {
                 schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
-                    required: ['todos'],
+                    required: ['data'],
                     properties: {
-                      todos: {
+                      data: {
                         type: 'array',
                         items: todoSchema,
                       },
@@ -200,9 +200,9 @@ export default asRoute(async function (router) {
                 schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
-                    required: ['todo'],
+                    required: ['data'],
                     properties: {
-                      todo: todoSchema,
+                      data: todoSchema,
                     },
                   }),
                 ),
@@ -237,9 +237,9 @@ export default asRoute(async function (router) {
                 schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
-                    required: ['todo'],
+                    required: ['data'],
                     properties: {
-                      todo: todoSchema,
+                      data: todoSchema,
                     },
                   }),
                 ),
@@ -263,9 +263,9 @@ export default asRoute(async function (router) {
                 schema: describeSchema(
                   asJsonSchema({
                     type: 'object',
-                    required: ['todo'],
+                    required: ['data'],
                     properties: {
-                      todo: todoSchema,
+                      data: todoSchema,
                     },
                   }),
                 ),
