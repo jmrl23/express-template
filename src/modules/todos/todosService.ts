@@ -1,12 +1,12 @@
 import { NotFound } from 'http-errors';
 import { FromSchema } from 'json-schema-to-ts';
 import crypto from 'node:crypto';
-import { todoSchema, todosGetSchema } from '../schemas/todos';
-import CacheService from './CacheService';
+import { todoSchema, todosGetSchema } from './todosSchema';
+import { CacheService } from '../cache/cacheService';
 
 export interface Todo extends FromSchema<typeof todoSchema> {}
 
-export default class TodoService {
+export class TodosService {
   constructor(private readonly cacheService: CacheService) {}
 
   public async createTodo(content: string): Promise<Todo> {

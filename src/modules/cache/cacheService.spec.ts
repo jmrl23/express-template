@@ -1,7 +1,7 @@
 import { caching } from 'cache-manager';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import CacheService from './CacheService';
+import { CacheService } from './cacheService';
 
 async function delay(ms: number): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, ms));

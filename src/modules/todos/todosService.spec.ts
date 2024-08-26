@@ -1,42 +1,42 @@
 import { caching } from 'cache-manager';
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import CacheService from './CacheService';
-import TodoService, { Todo } from './TodoService';
+import { CacheService } from '../cache/cacheService';
+import { Todo, TodosService } from './todosService';
 
 describe('test todo service', async function testTodoService() {
   const cache = await caching('memory');
   const cacheService = new CacheService(cache);
-  const todoService = new TodoService(cacheService);
+  const todosService = new TodosService(cacheService);
   let itemRef: Todo;
 
   it('create item', async () => {
-    const item = await todoService.createTodo('Walk the dog');
+    const item = await todosService.createTodo('Walk the dog');
     assert.ok(item);
     itemRef = structuredClone(item);
   });
 
   it('get item', async () => {
-    await assert.rejects(todoService.getTodo('invalid id'));
-    const item = await todoService.getTodo(itemRef.id);
+    await assert.rejects(todosService.getTodo('invalid id'));
+    const item = await todosService.getTodo(itemRef.id);
     assert.deepStrictEqual(itemRef, item);
   });
 
   it('get items', async () => {
-    const items = await todoService.getTodos();
+    const items = await todosService.getTodos();
     assert.strictEqual(items.length, 1);
   });
 
   it('update item', async () => {
     const content = 'Walk the cat';
-    const item = await todoService.updateTodo(itemRef.id, content);
+    const item = await todosService.updateTodo(itemRef.id, content);
     assert.strictEqual(item.content, content);
   });
 
   it('delete item', async () => {
     const id = itemRef.id;
-    const item = await todoService.deleteTodo(id);
+    const item = await todosService.deleteTodo(id);
     assert.strictEqual(item.id, id);
-    await assert.rejects(todoService.deleteTodo(id));
+    await assert.rejects(todosService.deleteTodo(id));
   });
 });

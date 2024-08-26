@@ -18,7 +18,7 @@ export default asPlugin(async function (app) {
   await middlewares(app);
 
   await routes(app, {
-    dirPath: path.resolve(__dirname, './routes'),
+    dirPath: path.resolve(__dirname, './modules'),
     callback(routes) {
       for (const route of routes) {
         logger.info(`registered route {${route}}`);

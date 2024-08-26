@@ -1,6 +1,6 @@
 import { Cache } from 'cache-manager';
 
-export default class CacheService {
+export class CacheService {
   constructor(public readonly cache: Cache) {}
 
   public get = this.cache.get.bind(this.cache);

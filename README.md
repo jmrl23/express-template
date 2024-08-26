@@ -28,17 +28,32 @@ Core files and folders
 
 ```
 src/
-├── app.ts             // main express instance
-├── bootstrap.ts       // main plugin wrapper
-├── init.ts            // initialization SYNC processes (MUST IMPORT IN `main.ts` BEFORE ANYTHING ELSE)
-├── lib/
-│   ├── common/        // contains shared resources for the entire application
-│   └── constant
-│       └── env.ts     // environment variables
-├── main.ts            // main entrypoint
-├── plugins/           // contains plugin files
-├── routes/            // contains route function files
-├── schemas/           // contains schema files (json schema)
-├── services/          // contains services/ injectables
-└── test.ts            // test entrypoint (executes test files)
+├── app.ts                        # main express instance
+├── bootstrap.ts                  # main plugins entrypoint
+├── init.ts                       # initialization file
+├── lib/                          # libraries
+│   ├── common/
+│   │   ├── index.ts
+│   │   ├── logger.ts
+│   │   ├── swagger.ts
+│   │   ├── typings.ts
+│   │   ├── validate.ts
+│   │   └── wrapper.ts
+│   └── constant/
+│       └── env.ts
+├── main.ts                       # main entrypoint
+├── modules/
+│   ├── cache/
+│   │   ├── cacheService.spec.ts
+│   │   └── cacheService.ts
+│   └── todos/                    # example module
+│       ├── todos.route.ts
+│       ├── todosSchema.ts
+│       ├── todosService.spec.ts
+│       └── todosService.ts
+├── plugins/
+│   ├── middlewares.ts
+│   ├── routes.ts
+│   └── swagger.ts
+└── test.ts                       # test entrypoint (run all test files)
 ```

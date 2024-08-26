@@ -9,7 +9,7 @@ import {
   validate,
   WPayload,
   wrapper,
-} from '../lib/common';
+} from '../../lib/common';
 import {
   todoCreateSchema,
   todoDeleteSchema,
@@ -17,9 +17,9 @@ import {
   todoSchema,
   todosGetSchema,
   todoUpdateSchema,
-} from '../schemas/todos';
-import CacheService from '../services/CacheService';
-import TodoService from '../services/TodoService';
+} from './todosSchema';
+import { CacheService } from '../cache/cacheService';
+import { TodosService } from './todosService';
 
 export const prefix = '/todos';
 
@@ -30,7 +30,7 @@ export default asRoute(async function (router) {
     memoryStore({ ttl: 0 }),
   );
   const cacheService = new CacheService(cache);
-  const todoService = new TodoService(cacheService);
+  const todosService = new TodosService(cacheService);
 
   router
 
@@ -43,7 +43,7 @@ export default asRoute(async function (router) {
         }>
       >(async function (request) {
         const { content } = request.body;
-        const todo = await todoService.createTodo(content);
+        const todo = await todosService.createTodo(content);
         return {
           data: todo,
         };
@@ -59,7 +59,7 @@ export default asRoute(async function (router) {
         }>
       >(async function (request) {
         const query = request.query;
-        const todos = await todoService.getTodos(query);
+        const todos = await todosService.getTodos(query);
         return {
           data: todos,
         };
@@ -75,7 +75,7 @@ export default asRoute(async function (router) {
         }>
       >(async function (request) {
         const { id } = request.params;
-        const todo = await todoService.getTodo(id);
+        const todo = await todosService.getTodo(id);
         return {
           data: todo,
         };
@@ -94,7 +94,7 @@ export default asRoute(async function (router) {
       >(async function (request) {
         const id = request.params.id;
         const { content, done } = request.body;
-        const todo = await todoService.updateTodo(id, content, done);
+        const todo = await todosService.updateTodo(id, content, done);
         return {
           data: todo,
         };
@@ -110,7 +110,7 @@ export default asRoute(async function (router) {
         }>
       >(async function (request) {
         const { id } = request.params;
-        const todo = await todoService.deleteTodo(id);
+        const todo = await todosService.deleteTodo(id);
         return {
           data: todo,
         };
