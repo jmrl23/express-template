@@ -3,6 +3,9 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
+    ignores: ['build/*'],
+  },
+  {
     languageOptions: {
       globals: { ...globals.node },
     },
