@@ -3,9 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 import {
   asJsonSchema,
   asRoute,
-  describeParameters,
-  describePaths,
-  describeSchema,
   validate,
   WPayload,
   wrapper,
@@ -23,7 +20,7 @@ import { TodosService } from './todosService';
 
 export const prefix = '/todos';
 
-export default asRoute(async function (router) {
+export default asRoute(async function (router, express) {
   const cache = await caching(
     // check compatible stores at https://www.npmjs.com/package/cache-manager#store-engines
     // or implement your own
@@ -118,10 +115,12 @@ export default asRoute(async function (router) {
     );
 
   /**
-   * Documents API endpoints using Swagger/OpenAPI.
+   * Documents API endpoints using Swagger/OpenAPI. (Optional)
    * It defines routes, request details, and responses, helping to generate clear and useful API documentation.
+   *
+   * Note: To disable API endpoints documentation, unregister (remove) the `docsPlugin` inside the bootstrap file.
    */
-  describePaths({
+  express.docsService.paths({
     '/todos/create': {
       post: {
         description: 'create a todo',
@@ -130,7 +129,7 @@ export default asRoute(async function (router) {
           required: true,
           content: {
             'application/json': {
-              schema: describeSchema(todoCreateSchema),
+              schema: express.docsService.schema(todoCreateSchema),
               example: {
                 content: todoCreateSchema.properties.content.examples[0],
               },
@@ -142,7 +141,7 @@ export default asRoute(async function (router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: describeSchema(
+                schema: express.docsService.schema(
                   asJsonSchema({
                     type: 'object',
                     required: ['data'],
@@ -162,13 +161,13 @@ export default asRoute(async function (router) {
       get: {
         description: 'get todos by query',
         tags: ['todo'],
-        parameters: describeParameters('query', todosGetSchema),
+        parameters: express.docsService.parameters('query', todosGetSchema),
         responses: {
           '200': {
             description: 'todos',
             content: {
               'application/json': {
-                schema: describeSchema(
+                schema: express.docsService.schema(
                   asJsonSchema({
                     type: 'object',
                     required: ['data'],
@@ -191,13 +190,13 @@ export default asRoute(async function (router) {
       get: {
         description: 'get a todo',
         tags: ['todo'],
-        parameters: describeParameters('path', todoGetSchema),
+        parameters: express.docsService.parameters('path', todoGetSchema),
         responses: {
           '200': {
             description: 'todo',
             content: {
               'application/json': {
-                schema: describeSchema(
+                schema: express.docsService.schema(
                   asJsonSchema({
                     type: 'object',
                     required: ['data'],
@@ -217,7 +216,7 @@ export default asRoute(async function (router) {
       patch: {
         description: 'update a todo',
         tags: ['todo'],
-        parameters: describeParameters(
+        parameters: express.docsService.parameters(
           'path',
           todoUpdateSchema.properties.params,
         ),
@@ -225,7 +224,9 @@ export default asRoute(async function (router) {
           required: true,
           content: {
             'application/json': {
-              schema: describeSchema(todoUpdateSchema.properties.body),
+              schema: express.docsService.schema(
+                todoUpdateSchema.properties.body,
+              ),
             },
           },
         },
@@ -234,7 +235,7 @@ export default asRoute(async function (router) {
             description: 'todo',
             content: {
               'application/json': {
-                schema: describeSchema(
+                schema: express.docsService.schema(
                   asJsonSchema({
                     type: 'object',
                     required: ['data'],
@@ -254,13 +255,13 @@ export default asRoute(async function (router) {
       delete: {
         description: 'delete a todo',
         tags: ['todo'],
-        parameters: describeParameters('path', todoDeleteSchema),
+        parameters: express.docsService.parameters('path', todoDeleteSchema),
         responses: {
           '200': {
             description: 'todo',
             content: {
               'application/json': {
-                schema: describeSchema(
+                schema: express.docsService.schema(
                   asJsonSchema({
                     type: 'object',
                     required: ['data'],

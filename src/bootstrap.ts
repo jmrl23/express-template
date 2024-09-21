@@ -6,9 +6,9 @@ import createHttpError, {
 } from 'http-errors';
 import path from 'node:path';
 import { asPlugin, logger, wrapper } from './lib/common';
+import docsPlugin from './modules/docs/docsPlugin';
 import middlewares from './plugins/middlewares';
 import routes from './plugins/routes';
-import swagger from './plugins/swagger';
 
 export default asPlugin(async function (app) {
   app.disable('x-powered-by');
@@ -17,6 +17,10 @@ export default asPlugin(async function (app) {
 
   await middlewares(app);
 
+  await docsPlugin(app, {
+    prefix: '/docs',
+  });
+
   await routes(app, {
     dirPath: path.resolve(__dirname, './modules'),
     callback(routes) {
@@ -24,10 +28,6 @@ export default asPlugin(async function (app) {
         logger.info(`registered route {${route}}`);
       }
     },
-  });
-
-  await swagger(app, {
-    routePrefix: '/docs',
   });
 
   await postConfigurations(app);
